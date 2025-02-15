@@ -12,8 +12,8 @@
             min-height: 100vh;
             font-family: Arial, sans-serif;
             margin: 0;
-            background-color: #F5F5F3; /* Soft warm minimalist white */
-            color: #333333; /* Dark gray for contrast */
+            background-color: #F5F5F3;
+            color: #333333;
         }
         .container {
             text-align: center;
@@ -36,7 +36,7 @@
             font-size: 2em;
             font-weight: bold;
             margin-bottom: 0.5em;
-            color: #222222; /* Soft black */
+            color: #222222;
         }
         .profile-img {
             width: 150px;
@@ -44,61 +44,80 @@
             border-radius: 50%;
             margin-bottom: 1.5em;
             object-fit: cover;
-            border: 3px solid #dcdcdc; /* Subtle border */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08); /* Soft shadow */
+            border: 3px solid #dcdcdc;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
         }
         .tagline {
             font-size: 1.2em;
-            color: #555555; /* Muted gray */
+            color: #555555;
             margin-bottom: 1.5em;
+            letter-spacing: 0.5px;
         }
         .contact-text {
             margin-top: 1.5em;
             margin-bottom: 0.5em;
-            color: #777777; /* Medium gray */
+            color: #777777;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .social-links {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 30px;
             margin: 1em 0;
         }
-        .social-icon {
-            width: 40px;
-            height: 40px;
-            fill: #000000; /* Solid black icon */
-            stroke: #000000; /* Black border */
-            stroke-width: 2;
-            padding: 5px; /* Spacing for a cleaner look */
-            border-radius: 6px; /* Slight rounded edges */
-            background-color: #ffffff; /* White background inside */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* Light shadow */
-            transition: transform 0.3s ease, stroke 0.3s ease;
+        .social-link {
+            text-decoration: none;
+            position: relative;
+            transition: all 0.3s ease;
         }
-        .social-icon:hover {
-            transform: scale(1.1);
-            stroke: #555555; /* Softer border on hover */
+        .social-icon {
+            width: 24px;
+            height: 24px;
+            stroke: #333333;
+            stroke-width: 1.5;
+            fill: none;
+            transition: all 0.3s ease;
+        }
+        .social-link::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            background: #333333;
+            bottom: -6px;
+            left: 0;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        .social-link:hover::after {
+            transform: scaleX(1);
+        }
+        .social-link:hover .social-icon {
+            stroke: #000000;
+            transform: translateY(-2px);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <img src="elisabetta_rappino.jpeg" alt="Elisabetta Rappo" class="profile-img">
+        <img src="profile.jpg" alt="Elisabetta Rappo" class="profile-img">
         <h1>Elisabetta Rappo</h1>
         <p class="tagline">Operations and Business Development in NYC</p>
-        <p class="contact-text">You can reach me:</p>
+        <p class="contact-text">Connect</p>
         <div class="social-links">
-            <a href="mailto:rappo.elisabetta@gmail.com" title="Email">
+            <a href="mailto:rappo.elisabetta@gmail.com" class="social-link" title="Email">
                 <svg class="social-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="24" height="24" fill="none"/>
-                    <path d="M2 6c0-1.1.9-2 2-2h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6z"/>
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                     <polyline points="22,6 12,13 2,6"/>
                 </svg>
             </a>
-            <a href="https://www.linkedin.com/in/elisabetta-rappo/" title="LinkedIn">
+            <a href="https://www.linkedin.com/in/elisabetta-rappo/" class="social-link" title="LinkedIn">
                 <svg class="social-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="24" height="24" fill="none"/>
-                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                    <rect x="2" y="9" width="4" height="12"/>
+                    <circle cx="4" cy="4" r="2"/>
                 </svg>
             </a>
         </div>

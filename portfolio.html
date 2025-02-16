@@ -46,7 +46,7 @@
             transform: scaleX(1);
         }
         .container {
-            max-width: 800px;
+            max-width: 1200px;  /* Increased for the chart */
             padding: 0 40px;
             margin: 0 auto;
             opacity: 0;
@@ -75,11 +75,73 @@
             color: #555555;
             margin-bottom: 3em;
             letter-spacing: 0.3px;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
         .projects-section {
             margin-top: 4em;
         }
-    </style>
+
+        /* New styles for the project and chart section */
+        .project-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+            margin-top: 2em;
+        }
+        @media (max-width: 768px) {
+            .project-section {
+                grid-template-columns: 1fr;
+            }
+        }
+        .project-info {
+            padding-right: 20px;
+        }
+        h2 {
+            font-size: 1.5em;
+            color: #222222;
+            margin-bottom: 1em;
+            font-weight: bold;
+        }
+        .project-description {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #555555;
+            margin-bottom: 2em;
+        }
+        .chart-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .metal-toggle {
+            padding: 8px 16px;
+            border: 1px solid #333;
+            background: none;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8em;
+        }
+        .metal-toggle.active {
+            background: #333;
+            color: white;
+        }
+        .metal-toggle:hover {
+            transform: translateY(-2px);
+        }
+</style>
 </head>
 <body>
     <nav class="nav">
@@ -91,8 +153,43 @@
             Throughout my career in Operations and Business Development, I've had the opportunity to work on various impactful projects that have shaped my professional journey. Each project represents a unique challenge and learning experience that has contributed to my growth in the industry.
         </p>
         <div class="projects-section">
-            <!-- Projects will be added here -->
+           <div class="project-info">
+               <h2>Raw Material Analysis</h2>
+               <p class="project-description">
+            Leveraging data analytics to track and analyze global metal prices, this project provides comprehensive insights into market trends for aluminum, copper, and steel. The analysis helps in making informed decisions about procurement strategies and market positioning.
+            </p>
+        </div>
+        <div class="chart-section">
+        <div class="controls">
+            <button class="metal-toggle active" data-metal="aluminum">Aluminum</button>
+            <button class="metal-toggle" data-metal="copper">Copper</button>
+            <button class="metal-toggle" data-metal="steel">Steel</button>
+        </div>
+        <div class="chart-container">
+            <canvas id="metalChart"></canvas>
         </div>
     </div>
+</div>
+        <script src="market-data.js"></script>
+<script>
+    // Initialize with aluminum data
+    document.addEventListener('DOMContentLoaded', () => {
+        createChart('aluminum');
+
+        // Add click handlers for metal toggles
+        document.querySelectorAll('.metal-toggle').forEach(button => {
+            button.addEventListener('click', () => {
+                // Update active state
+                document.querySelectorAll('.metal-toggle').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                button.classList.add('active');
+
+                // Update chart
+                createChart(button.dataset.metal);
+            });
+        });
+    });
+</script>
 </body>
 </html>

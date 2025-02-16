@@ -3,17 +3,17 @@ const marketData = {
     aluminum: {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         values2024: [2100, 2150, 2080, 2200, 2180, 2250, 2300, 2280, 2320, 2340, 2290, 2234],
-        values2025: [2234, 2265, 2290, 2310]
+        values2025: [2234, 2265, null, null, null, null, null, null, null, null, null, null]
     },
     copper: {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         values2024: [8200, 8300, 8450, 8400, 8600, 8550, 8500, 8480, 8520, 8490, 8470, 8453],
-        values2025: [8453, 8420, 8390, 8410]
+        values2025: [8453, 8420, null, null, null, null, null, null, null, null, null, null]
     },
     steel: {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         values2024: [680, 695, 710, 700, 715, 725, 730, 720, 718, 722, 728, 725],
-        values2025: [725, 730, 735, 740]
+        values2025: [725, 730, null, null, null, null, null, null, null, null, null, null]
     }
 };
 

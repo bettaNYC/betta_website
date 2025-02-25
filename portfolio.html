@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projects - Elisabetta Rappo</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <!-- Load Chart.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
             font-family: Arial, sans-serif;
             margin: 0;
             background-color: #F5F5F3;
@@ -30,6 +28,7 @@
             letter-spacing: 1.5px;
             position: relative;
             transition: color 0.3s ease;
+            margin-left: 20px;
         }
         .nav-link::after {
             content: '';
@@ -49,18 +48,6 @@
             max-width: 1200px;
             padding: 0 40px;
             margin: 0 auto;
-            opacity: 0;
-            animation: fadeIn 1s ease-in forwards;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
         h1 {
             font-size: 2em;
@@ -84,10 +71,6 @@
             margin-top: 4em;
             margin-bottom: 6em;
         }
-        .project-info {
-            max-width: 800px;
-            margin: 0 auto;
-        }
         h2 {
             font-size: 1.5em;
             color: #222222;
@@ -99,7 +82,10 @@
             font-size: 1.1em;
             line-height: 1.8;
             color: #555555;
-            margin-bottom: 3em;
+            margin-bottom: 2em;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
         .chart-container {
             background: white;
@@ -133,13 +119,11 @@
         .metal-toggle:hover {
             transform: translateY(-2px);
         }
-        
-        /* Two-column layout */
         .two-column {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 40px;
-            align-items: center;
+            max-width: 1200px;
             margin: 0 auto;
         }
         @media (max-width: 768px) {
@@ -147,26 +131,19 @@
                 grid-template-columns: 1fr;
             }
         }
-        .financial-chart-container {
+        .chart-box {
             background: white;
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
-        .mt-4 {
-            margin-top: 20px;
-        }
-        .financial-text {
+        .text-box {
             padding: 20px;
-        }
-        .financial-title {
-            font-weight: bold;
-            font-size: 1.2em;
-            margin-bottom: 1em;
         }
         .section-title {
             font-weight: bold;
             margin: 1.2em 0 0.8em;
+            font-size: 1.1em;
         }
         ul {
             padding-left: 20px;
@@ -191,11 +168,9 @@
         <!-- Raw Materials Analysis Project -->
         <div class="project-section">
             <h2>Raw Material Analysis</h2>
-            <div class="project-info">
-                <p class="project-description">
-                    Leveraging data analytics to track and analyze global metal prices, this project provides comprehensive insights into market trends for aluminum, copper, and steel. The analysis helps in making informed decisions about procurement strategies and market positioning.
-                </p>
-            </div>
+            <p class="project-description">
+                Leveraging data analytics to track and analyze global metal prices, this project provides comprehensive insights into market trends for aluminum, copper, and steel. The analysis helps in making informed decisions about procurement strategies and market positioning.
+            </p>
             <div class="chart-container">
                 <div class="controls">
                     <button class="metal-toggle active" data-metal="aluminum">Aluminum</button>
@@ -210,11 +185,13 @@
         <div class="project-section">
             <h2>Financial Reporting System</h2>
             <div class="two-column">
-                <div class="financial-chart-container">
+                <div class="chart-box">
                     <canvas id="financialChart"></canvas>
+                    <div style="margin-top: 20px;">
+                        <canvas id="projectChart"></canvas>
+                    </div>
                 </div>
-                <div class="financial-text">
-                    <div class="financial-title">Financial Reporting System at InnoTech</div>
+                <div class="text-box">
                     <p>At InnoTech, I designed and implemented a financial reporting system that provides real-time tracking and analysis of business expenses. This system delivers clear insights into costs, profitability, and financial impact across projects, enabling data-driven decision-making.</p>
                     
                     <div class="section-title">System Capabilities</div>
@@ -237,253 +214,378 @@
                 </div>
             </div>
         </div>
+
+        <!-- Warehouse Analytics Project -->
+        <div class="project-section">
+            <h2>Warehouse Analytics Dashboard</h2>
+            <p class="project-description">
+                I developed a comprehensive method for warehouse analysis, identifying critical KPIs and creating an interactive dashboard using data extracted from SAP. This tool provides essential visibility into inventory movements, stock value, and operational efficiency metrics.
+            </p>
+            <div class="two-column">
+                <div class="chart-box">
+                    <canvas id="warehouseChart"></canvas>
+                </div>
+                <div class="text-box">
+                    <div class="section-title">Methodology</div>
+                    <ul>
+                        <li>Identified critical warehouse KPIs to monitor performance and efficiency</li>
+                        <li>Extracted and consolidated data from SAP systems</li>
+                        <li>Designed visualizations to track inventory movements and values</li>
+                        <li>Created automated dashboard for real-time monitoring</li>
+                    </ul>
+                    
+                    <div class="section-title">Dashboard Components</div>
+                    <ul>
+                        <li>Consumption analysis by product category and location</li>
+                        <li>Warehouse value trends with monthly comparisons</li>
+                        <li>Part number movement tracking with percentage analysis</li>
+                        <li>Average lead time analysis by product type</li>
+                        <li>Stock value assessment for moved vs. non-moved inventory</li>
+                    </ul>
+                    
+                    <div class="section-title">Business Impact</div>
+                    <ul>
+                        <li>Enhanced visibility into warehouse performance and inventory status</li>
+                        <li>Improved inventory turnover through identification of slow-moving items</li>
+                        <li>Reduced carrying costs by optimizing stock levels</li>
+                        <li>Data-driven decisions for procurement and warehouse management</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Sample data for metal prices
-        const marketData = {
-            aluminum: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                values2024: [2100, 2150, 2080, 2200, 2180, 2250, 2300, 2280, 2320, 2340, 2290, 2234],
-                values2025: [2234, 2265, null, null, null, null, null, null, null, null, null, null]
-            },
-            copper: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                values2024: [8200, 8300, 8450, 8400, 8600, 8550, 8500, 8480, 8520, 8490, 8470, 8453],
-                values2025: [8453, 8420, null, null, null, null, null, null, null, null, null, null]
-            },
-            steel: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                values2024: [680, 695, 710, 700, 715, 725, 730, 720, 718, 722, 728, 725],
-                values2025: [725, 730, null, null, null, null, null, null, null, null, null, null]
-            }
-        };
-
-        function createChart(metal) {
-            const ctx = document.getElementById('metalChart').getContext('2d');
-            
-            if (window.currentChart) {
-                window.currentChart.destroy();
-            }
-
-            window.currentChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: marketData[metal].labels,
-                    datasets: [
-                        {
-                            label: '2024',
-                            data: marketData[metal].values2024,
-                            borderColor: '#2c3e50',
-                            backgroundColor: 'rgba(44, 62, 80, 0.1)',
-                            tension: 0.4,
-                            fill: true,
-                            borderWidth: 2
-                        },
-                        {
-                            label: '2025',
-                            data: marketData[metal].values2025,
-                            borderColor: '#8e44ad',
-                            backgroundColor: 'rgba(142, 68, 173, 0.1)',
-                            tension: 0.4,
-                            fill: true,
-                            borderWidth: 2
-                        }
-                    ]
+    // Wait for DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("DOM loaded, initializing charts...");
+        
+        // CHART 1: Metal Prices
+        try {
+            console.log("Creating metals chart...");
+            const metalData = {
+                aluminum: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    values2024: [2100, 2150, 2080, 2200, 2180, 2250, 2300, 2280, 2320, 2340, 2290, 2234],
+                    values2025: [2234, 2265, null, null, null, null, null, null, null, null, null, null]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    interaction: {
-                        intersect: false,
-                        mode: 'index'
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                usePointStyle: true,
-                                padding: 20
+                copper: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    values2024: [8200, 8300, 8450, 8400, 8600, 8550, 8500, 8480, 8520, 8490, 8470, 8453],
+                    values2025: [8453, 8420, null, null, null, null, null, null, null, null, null, null]
+                },
+                steel: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    values2024: [680, 695, 710, 700, 715, 725, 730, 720, 718, 722, 728, 725],
+                    values2025: [725, 730, null, null, null, null, null, null, null, null, null, null]
+                }
+            };
+            
+            const metalCtx = document.getElementById('metalChart');
+            if (!metalCtx) {
+                console.error("Metal chart canvas not found!");
+            } else {
+                const metalChart = new Chart(metalCtx, {
+                    type: 'line',
+                    data: {
+                        labels: metalData.aluminum.labels,
+                        datasets: [
+                            {
+                                label: '2024',
+                                data: metalData.aluminum.values2024,
+                                borderColor: '#2c3e50',
+                                backgroundColor: 'rgba(44, 62, 80, 0.1)',
+                                tension: 0.4,
+                                fill: true,
+                                borderWidth: 2
+                            },
+                            {
+                                label: '2025',
+                                data: metalData.aluminum.values2025,
+                                borderColor: '#8e44ad',
+                                backgroundColor: 'rgba(142, 68, 173, 0.1)',
+                                tension: 0.4,
+                                fill: true,
+                                borderWidth: 2
                             }
-                        }
+                        ]
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.05)'
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top'
                             }
                         },
-                        x: {
-                            grid: {
-                                display: false
+                        scales: {
+                            y: {
+                                beginAtZero: false
                             }
                         }
                     }
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initialize metals chart
-            createChart('aluminum');
-
-            document.querySelectorAll('.metal-toggle').forEach(button => {
-                button.addEventListener('click', () => {
-                    document.querySelectorAll('.metal-toggle').forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-                    button.classList.add('active');
-                    createChart(button.dataset.metal);
                 });
-            });
-            
-            // Initialize financial charts based on sketch
-            // First chart - Quarterly Revenue vs Expenses
-            const finCtx = document.getElementById('financialChart').getContext('2d');
-            new Chart(finCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-                    datasets: [
-                        {
-                            label: 'Revenue',
-                            data: [68000, 75000, 90000, 105000],
-                            backgroundColor: '#2c3e50',
-                            order: 1
-                        },
-                        {
-                            label: 'Expenses',
-                            data: [50000, 55000, 68000, 75000],
-                            backgroundColor: '#8e44ad',
-                            order: 2
-                        },
-                        {
-                            label: 'Profit',
-                            data: [18000, 20000, 22000, 30000],
-                            type: 'line',
-                            borderColor: '#2ecc71',
-                            borderWidth: 2,
-                            fill: false,
-                            tension: 0.4,
-                            order: 0,
-                            pointBackgroundColor: '#2ecc71'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: 'Quarterly Business Performance'
-                        }
+                
+                // Metal toggle functionality
+                document.querySelectorAll('.metal-toggle').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const metal = button.dataset.metal;
+                        
+                        // Update active button
+                        document.querySelectorAll('.metal-toggle').forEach(btn => {
+                            btn.classList.remove('active');
+                        });
+                        button.classList.add('active');
+                        
+                        // Update chart data
+                        metalChart.data.datasets[0].data = metalData[metal].values2024;
+                        metalChart.data.datasets[1].data = metalData[metal].values2025;
+                        metalChart.update();
+                    });
+                });
+                
+                console.log("Metal chart created successfully");
+            }
+        } catch (e) {
+            console.error("Error creating metal chart:", e);
+        }
+        
+        // CHART 2: Financial Chart
+        try {
+            console.log("Creating financial chart...");
+            const finCtx = document.getElementById('financialChart');
+            if (!finCtx) {
+                console.error("Financial chart canvas not found!");
+            } else {
+                new Chart(finCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                        datasets: [
+                            {
+                                label: 'Revenue',
+                                data: [68000, 75000, 90000, 105000],
+                                backgroundColor: '#2c3e50',
+                                order: 1
+                            },
+                            {
+                                label: 'Expenses',
+                                data: [50000, 55000, 68000, 75000],
+                                backgroundColor: '#8e44ad',
+                                order: 2
+                            },
+                            {
+                                label: 'Profit',
+                                data: [18000, 20000, 22000, 30000],
+                                type: 'line',
+                                borderColor: '#2ecc71',
+                                borderWidth: 2,
+                                fill: false,
+                                tension: 0.4,
+                                order: 0,
+                                pointBackgroundColor: '#2ecc71'
+                            }
+                        ]
                     },
-                    scales: {
-                        x: {
-                            grid: {
-                                display: false
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Quarterly Business Performance'
                             }
                         },
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return '$' + value;
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value;
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            });
-            
-            // Create a second canvas for project-level data
-            const projectChartContainer = document.createElement('div');
-            projectChartContainer.className = 'mt-4';
-            document.querySelector('.financial-chart-container').appendChild(projectChartContainer);
-            
-            const projectCanvas = document.createElement('canvas');
-            projectCanvas.id = 'projectChart';
-            projectChartContainer.appendChild(projectCanvas);
-            
-            // Second chart - Project level data
-            const projCtx = document.getElementById('projectChart').getContext('2d');
-            new Chart(projCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['P1', 'P2', 'P3'],
-                    datasets: [
-                        {
-                            label: 'Project Revenue',
-                            data: [30000, 45000, 55000],
-                            backgroundColor: '#2c3e50'
-                        },
-                        {
-                            label: 'Project Expenses',
-                            data: [22000, 30000, 38000],
-                            backgroundColor: '#8e44ad'
-                        },
-                        {
-                            label: 'Production',
-                            data: [28000, 40000, 48000],
-                            type: 'line',
-                            borderColor: '#e67e22',
-                            borderWidth: 3,
-                            fill: false,
-                            tension: 0.4,
-                            yAxisID: 'y1',
-                            pointBackgroundColor: '#e67e22'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: 'Project Analysis'
-                        }
+                });
+                console.log("Financial chart created successfully");
+            }
+        } catch (e) {
+            console.error("Error creating financial chart:", e);
+        }
+        
+        // CHART 3: Project Chart
+        try {
+            console.log("Creating project chart...");
+            const projCtx = document.getElementById('projectChart');
+            if (!projCtx) {
+                console.error("Project chart canvas not found!");
+            } else {
+                new Chart(projCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['P1', 'P2', 'P3'],
+                        datasets: [
+                            {
+                                label: 'Revenue',
+                                data: [30000, 45000, 55000],
+                                backgroundColor: '#2c3e50',
+                                stack: 'revenue'
+                            },
+                            {
+                                label: 'Production',
+                                data: [12000, 16000, 20000],
+                                backgroundColor: '#8e44ad',
+                                stack: 'costs'
+                            },
+                            {
+                                label: 'Installation',
+                                data: [4000, 6000, 8000],
+                                backgroundColor: '#e67e22',
+                                stack: 'costs'
+                            },
+                            {
+                                label: 'Shipping',
+                                data: [2500, 3500, 4500],
+                                backgroundColor: '#27ae60',
+                                stack: 'costs'
+                            },
+                            {
+                                label: 'Duties',
+                                data: [1500, 2000, 2500],
+                                backgroundColor: '#3498db',
+                                stack: 'costs'
+                            },
+                            {
+                                label: 'Project Management',
+                                data: [2000, 2500, 3000],
+                                backgroundColor: '#f1c40f',
+                                stack: 'costs'
+                            }
+                        ]
                     },
-                    scales: {
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            position: 'left',
+                    options: {
+                        responsive: true,
+                        plugins: {
                             title: {
                                 display: true,
-                                text: 'Amount ($)'
-                            },
-                            ticks: {
-                                callback: function(value) {
-                                    return '$' + value;
+                                text: 'Project Analysis with Detailed Costs'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value;
+                                    }
                                 }
-                            }
-                        },
-                        y1: {
-                            beginAtZero: true,
-                            position: 'right',
-                            title: {
-                                display: true,
-                                text: 'Production'
-                            },
-                            grid: {
-                                drawOnChartArea: false
                             }
                         }
                     }
-                }
-            });
-        });
+                });
+                console.log("Project chart created successfully");
+            }
+        } catch (e) {
+            console.error("Error creating project chart:", e);
+        }
+        
+        // CHART 4: Warehouse Chart
+        try {
+            console.log("Creating warehouse chart...");
+            const whsCtx = document.getElementById('warehouseChart');
+            if (!whsCtx) {
+                console.error("Warehouse chart canvas not found!");
+            } else {
+                new Chart(whsCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                        datasets: [
+                            {
+                                label: 'USPA Value (€)',
+                                type: 'bar',
+                                data: [1300000, 1350000, 1380000, 1400000, 1450000, 1480000, 1520000, 1490000, 1510000, 1530000, 1520000, 1541159],
+                                backgroundColor: 'rgba(231, 76, 60, 0.6)',
+                                borderColor: 'rgba(231, 76, 60, 1)',
+                                borderWidth: 1,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'UNAM Value (€)',
+                                type: 'bar',
+                                data: [1650000, 1680000, 1700000, 1750000, 1780000, 1820000, 1790000, 1760000, 1780000, 1790000, 1800000, 1801374],
+                                backgroundColor: 'rgba(52, 152, 219, 0.6)',
+                                borderColor: 'rgba(52, 152, 219, 1)',
+                                borderWidth: 1,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'USPA Quantity',
+                                type: 'line',
+                                data: [28000, 29000, 29500, 30000, 31000, 31500, 32000, 31500, 31000, 32000, 33000, 34000],
+                                borderColor: 'rgba(231, 76, 60, 1)',
+                                borderWidth: 2,
+                                pointBackgroundColor: 'rgba(231, 76, 60, 1)',
+                                fill: false,
+                                yAxisID: 'y1'
+                            },
+                            {
+                                label: 'UNAM Quantity',
+                                type: 'line',
+                                data: [22000, 22500, 23000, 24000, 24500, 25000, 24000, 23500, 24000, 24500, 25000, 25500],
+                                borderColor: 'rgba(52, 152, 219, 1)',
+                                borderWidth: 2,
+                                pointBackgroundColor: 'rgba(52, 152, 219, 1)',
+                                fill: false,
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Warehouses Trend 2021'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Value (€)'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return '€' + value.toLocaleString();
+                                    }
+                                }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Quantity'
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            }
+                        }
+                    }
+                });
+                console.log("Warehouse chart created successfully");
+            }
+        } catch (e) {
+            console.error("Error creating warehouse chart:", e);
+        }
+        
+        console.log("All chart initialization complete");
+    });
     </script>
 </body>
 </html>

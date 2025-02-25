@@ -46,7 +46,7 @@
             transform: scaleX(1);
         }
         .container {
-            max-width: 1200px;  /* Increased for the chart */
+            max-width: 1200px;
             padding: 0 40px;
             margin: 0 auto;
             opacity: 0;
@@ -80,46 +80,38 @@
             margin-left: auto;
             margin-right: auto;
         }
-        .projects-section {
-            margin-top: 4em;
-        }
-
-        /* New styles for the project and chart section */
         .project-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: start;
-            margin-top: 2em;
-        }
-        @media (max-width: 768px) {
-            .project-section {
-                grid-template-columns: 1fr;
-            }
+            margin-top: 4em;
+            margin-bottom: 6em;
         }
         .project-info {
-            padding-right: 20px;
+            max-width: 800px;
+            margin: 0 auto;
         }
         h2 {
             font-size: 1.5em;
             color: #222222;
-            margin-bottom: 1em;
+            margin-bottom: 1.5em;
             font-weight: bold;
+            text-align: center;
         }
         .project-description {
             font-size: 1.1em;
             line-height: 1.8;
             color: #555555;
-            margin-bottom: 2em;
+            margin-bottom: 3em;
         }
         .chart-container {
             background: white;
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin: 2em auto;
+            max-width: 800px;
         }
         .controls {
             display: flex;
+            justify-content: center;
             gap: 10px;
             margin-bottom: 20px;
         }
@@ -141,7 +133,48 @@
         .metal-toggle:hover {
             transform: translateY(-2px);
         }
-</style>
+        
+        /* New styles for two-column layout */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            margin: 0 auto;
+        }
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+        .financial-chart-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .financial-text {
+            padding: 20px;
+        }
+        .financial-title {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 1em;
+        }
+        .emoji-bullet {
+            margin-bottom: 0.8em;
+        }
+        .impact-section {
+            margin-top: 1.5em;
+        }
+        .highlight {
+            font-weight: bold;
+        }
+        .section-title {
+            font-weight: bold;
+            margin: 1.2em 0 0.8em;
+        }
+    </style>
 </head>
 <body>
     <nav class="nav">
@@ -152,44 +185,123 @@
         <p class="intro-text">
             Throughout my career in Operations and Business Development, I've had the opportunity to work on various impactful projects that have shaped my professional journey. Each project represents a unique challenge and learning experience that has contributed to my growth in the industry.
         </p>
-        <div class="projects-section">
-           <div class="project-info">
-               <h2>Raw Material Analysis</h2>
-               <p class="project-description">
-            Leveraging data analytics to track and analyze global metal prices, this project provides comprehensive insights into market trends for aluminum, copper, and steel. The analysis helps in making informed decisions about procurement strategies and market positioning.
-            </p>
+
+        <!-- Raw Materials Analysis Project -->
+        <div class="project-section">
+            <h2>Raw Material Analysis</h2>
+            <div class="project-info">
+                <p class="project-description">
+                    Leveraging data analytics to track and analyze global metal prices, this project provides comprehensive insights into market trends for aluminum, copper, and steel. The analysis helps in making informed decisions about procurement strategies and market positioning.
+                </p>
+            </div>
+            <div class="chart-container">
+                <div class="controls">
+                    <button class="metal-toggle active" data-metal="aluminum">Aluminum</button>
+                    <button class="metal-toggle" data-metal="copper">Copper</button>
+                    <button class="metal-toggle" data-metal="steel">Steel</button>
+                </div>
+                <canvas id="metalChart"></canvas>
+            </div>
         </div>
-        <div class="chart-section">
-        <div class="controls">
-            <button class="metal-toggle active" data-metal="aluminum">Aluminum</button>
-            <button class="metal-toggle" data-metal="copper">Copper</button>
-            <button class="metal-toggle" data-metal="steel">Steel</button>
-        </div>
-        <div class="chart-container">
-            <canvas id="metalChart"></canvas>
+
+        <!-- Financial Reporting Project -->
+        <div class="project-section">
+            <h2>Financial Reporting System</h2>
+            <div class="two-column">
+                <div class="financial-chart-container">
+                    <canvas id="financialChart"></canvas>
+                </div>
+                <div class="financial-text">
+                    <div class="financial-title">Introducing Financial Reporting in InnoTech</div>
+                    <p>At <span class="highlight">InnoTech</span>, I successfully implemented a <span class="highlight">financial reporting system</span> that tracks and analyzes all business expenses, providing clear insights into costs, profitability, and financial impact across different projects.</p>
+                    
+                    <div class="section-title">What I Built:</div>
+                    <div class="emoji-bullet">🔹 A <span class="highlight">data-driven financial system</span> that collects all company expenses in real-time.</div> 
+                    <div class="emoji-bullet">🔹 Automated analysis to determine <span class="highlight">total costs, profit, and loss</span> for each project.</div>
+                    <div class="emoji-bullet">🔹 Breakdown of <span class="highlight">expense categories</span> to identify the <span class="highlight">biggest cost drivers</span>.</div>
+                    <div class="emoji-bullet">🔹 Actionable insights to <span class="highlight">optimize spending</span> and <span class="highlight">maximize profitability</span>.</div>
+                    
+                    <div class="section-title">Impact on the Business:</div>
+                    <div class="emoji-bullet">✅ Improved financial visibility for better decision-making.</div>
+                    <div class="emoji-bullet">✅ Identified key cost areas to optimize expenses.</div>
+                    <div class="emoji-bullet">✅ Helped forecast the budget needed to sustain operations.</div>
+                    <div class="emoji-bullet">✅ Enhanced profitability analysis at the project level.</div>
+                    
+                    <p>This system has empowered our team with <span class="highlight">data-backed financial insights</span>, enabling smarter financial strategies and <span class="highlight">sustainable business growth</span>.</p>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-        <script src="market-data.js"></script>
-<script>
-    // Initialize with aluminum data
-    document.addEventListener('DOMContentLoaded', () => {
-        createChart('aluminum');
 
-        // Add click handlers for metal toggles
-        document.querySelectorAll('.metal-toggle').forEach(button => {
-            button.addEventListener('click', () => {
-                // Update active state
-                document.querySelectorAll('.metal-toggle').forEach(btn => {
-                    btn.classList.remove('active');
+    <script src="market-data.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize metals chart
+            createChart('aluminum');
+
+            document.querySelectorAll('.metal-toggle').forEach(button => {
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('.metal-toggle').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    button.classList.add('active');
+                    createChart(button.dataset.metal);
                 });
-                button.classList.add('active');
-
-                // Update chart
-                createChart(button.dataset.metal);
+            });
+            
+            // Initialize financial chart
+            const ctx = document.getElementById('financialChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    datasets: [
+                        {
+                            label: 'Revenue',
+                            data: [65000, 75000, 82000, 98000],
+                            backgroundColor: '#2c3e50',
+                        },
+                        {
+                            label: 'Expenses',
+                            data: [48000, 52000, 57000, 62000],
+                            backgroundColor: '#8e44ad',
+                        },
+                        {
+                            label: 'Profit',
+                            data: [17000, 23000, 25000, 36000],
+                            backgroundColor: '#2ecc71',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Quarterly Financial Performance'
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value;
+                                }
+                            }
+                        }
+                    }
+                }
             });
         });
-    });
-</script>
+    </script>
 </body>
 </html>

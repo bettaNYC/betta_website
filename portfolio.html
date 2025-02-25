@@ -153,6 +153,9 @@
             padding: 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
+        .mt-4 {
+            margin-top: 20px;
+        }
         .financial-text {
             padding: 20px;
         }
@@ -161,11 +164,13 @@
             font-size: 1.2em;
             margin-bottom: 1em;
         }
-        .emoji-bullet {
-            margin-bottom: 0.8em;
+        ul {
+            padding-left: 20px;
+            margin-bottom: 1.5em;
         }
-        .impact-section {
-            margin-top: 1.5em;
+        li {
+            margin-bottom: 0.6em;
+            line-height: 1.6;
         }
         .highlight {
             font-weight: bold;
@@ -212,22 +217,26 @@
                     <canvas id="financialChart"></canvas>
                 </div>
                 <div class="financial-text">
-                    <div class="financial-title">Introducing Financial Reporting in InnoTech</div>
-                    <p>At <span class="highlight">InnoTech</span>, I successfully implemented a <span class="highlight">financial reporting system</span> that tracks and analyzes all business expenses, providing clear insights into costs, profitability, and financial impact across different projects.</p>
+                    <div class="financial-title">Financial Reporting System at InnoTech</div>
+                    <p>At InnoTech, I designed and implemented a financial reporting system that provides real-time tracking and analysis of business expenses. This system delivers clear insights into costs, profitability, and financial impact across projects, enabling data-driven decision-making.</p>
                     
-                    <div class="section-title">What I Built:</div>
-                    <div class="emoji-bullet">🔹 A <span class="highlight">data-driven financial system</span> that collects all company expenses in real-time.</div> 
-                    <div class="emoji-bullet">🔹 Automated analysis to determine <span class="highlight">total costs, profit, and loss</span> for each project.</div>
-                    <div class="emoji-bullet">🔹 Breakdown of <span class="highlight">expense categories</span> to identify the <span class="highlight">biggest cost drivers</span>.</div>
-                    <div class="emoji-bullet">🔹 Actionable insights to <span class="highlight">optimize spending</span> and <span class="highlight">maximize profitability</span>.</div>
+                    <div class="section-title">System Capabilities</div>
+                    <ul>
+                        <li>Real-time expense tracking, consolidating all company expenditures.</li>
+                        <li>Automated financial analysis to assess total costs, profit, and loss at the project level.</li>
+                        <li>Detailed expense categorization to identify key cost drivers.</li>
+                        <li>Actionable insights to optimize spending and enhance profitability.</li>
+                    </ul>
                     
-                    <div class="section-title">Impact on the Business:</div>
-                    <div class="emoji-bullet">✅ Improved financial visibility for better decision-making.</div>
-                    <div class="emoji-bullet">✅ Identified key cost areas to optimize expenses.</div>
-                    <div class="emoji-bullet">✅ Helped forecast the budget needed to sustain operations.</div>
-                    <div class="emoji-bullet">✅ Enhanced profitability analysis at the project level.</div>
+                    <div class="section-title">Business Impact</div>
+                    <ul>
+                        <li>Improved financial visibility, supporting strategic decision-making.</li>
+                        <li>Identification of key cost areas to drive efficiency and cost reduction.</li>
+                        <li>More accurate budget forecasting to sustain long-term operations.</li>
+                        <li>Enhanced project-level profitability assessment for better financial planning.</li>
+                    </ul>
                     
-                    <p>This system has empowered our team with <span class="highlight">data-backed financial insights</span>, enabling smarter financial strategies and <span class="highlight">sustainable business growth</span>.</p>
+                    <p>By providing precise, data-backed financial insights, this system has strengthened our financial strategy, improved operational efficiency, and supported sustainable business growth.</p>
                 </div>
             </div>
         </div>
@@ -249,27 +258,36 @@
                 });
             });
             
-            // Initialize financial chart
-            const ctx = document.getElementById('financialChart').getContext('2d');
-            new Chart(ctx, {
+            // Initialize financial charts based on sketch
+            // First chart - Quarterly Revenue vs Expenses
+            const finCtx = document.getElementById('financialChart').getContext('2d');
+            new Chart(finCtx, {
                 type: 'bar',
                 data: {
                     labels: ['Q1', 'Q2', 'Q3', 'Q4'],
                     datasets: [
                         {
                             label: 'Revenue',
-                            data: [65000, 75000, 82000, 98000],
+                            data: [68000, 75000, 90000, 105000],
                             backgroundColor: '#2c3e50',
+                            order: 1
                         },
                         {
                             label: 'Expenses',
-                            data: [48000, 52000, 57000, 62000],
+                            data: [50000, 55000, 68000, 75000],
                             backgroundColor: '#8e44ad',
+                            order: 2
                         },
                         {
                             label: 'Profit',
-                            data: [17000, 23000, 25000, 36000],
-                            backgroundColor: '#2ecc71',
+                            data: [18000, 20000, 22000, 30000],
+                            type: 'line',
+                            borderColor: '#2ecc71',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4,
+                            order: 0,
+                            pointBackgroundColor: '#2ecc71'
                         }
                     ]
                 },
@@ -281,7 +299,7 @@
                         },
                         title: {
                             display: true,
-                            text: 'Quarterly Financial Performance'
+                            text: 'Quarterly Business Performance'
                         }
                     },
                     scales: {
@@ -294,8 +312,100 @@
                             beginAtZero: true,
                             ticks: {
                                 callback: function(value) {
-                                    return '$' + value;
+                                    return '
+        });
+    </script>
+</body>
+</html> + value;
                                 }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Create a second canvas for project-level data
+            const projectChartContainer = document.createElement('div');
+            projectChartContainer.className = 'mt-4';
+            document.querySelector('.financial-chart-container').appendChild(projectChartContainer);
+            
+            const projectCanvas = document.createElement('canvas');
+            projectCanvas.id = 'projectChart';
+            projectChartContainer.appendChild(projectCanvas);
+            
+            // Second chart - Project level data
+            const projCtx = document.getElementById('projectChart').getContext('2d');
+            new Chart(projCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['P1', 'P2', 'P3'],
+                    datasets: [
+                        {
+                            label: 'Project Revenue',
+                            data: [30000, 45000, 55000],
+                            backgroundColor: '#2c3e50'
+                        },
+                        {
+                            label: 'Project Expenses',
+                            data: [22000, 30000, 38000],
+                            backgroundColor: '#8e44ad'
+                        },
+                        {
+                            label: 'Production',
+                            data: [28000, 40000, 48000],
+                            type: 'line',
+                            borderColor: '#e67e22',
+                            borderWidth: 3,
+                            fill: false,
+                            tension: 0.4,
+                            yAxisID: 'y1',
+                            pointBackgroundColor: '#e67e22'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Project Analysis'
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Amount ($)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '
+        });
+    </script>
+</body>
+</html> + value;
+                                }
+                            }
+                        },
+                        y1: {
+                            beginAtZero: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Production'
+                            },
+                            grid: {
+                                drawOnChartArea: false
                             }
                         }
                     }

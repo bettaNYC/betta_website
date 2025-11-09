@@ -3,7 +3,7 @@
 // You can get these from: https://www.strava.com/settings/api
 const STRAVA_CONFIG = {
     CLIENT_ID: '184712', // Your Strava Client ID
-    CLIENT_SECRET: '9e54914ba09df1d42fd9a2625e598d6d280f4a4a', // Your Strava Client Secret
+    CLIENT_SECRET: '9a5f16cc1a3e830cd8a3e7a2e516f492a6b8ae09', // Your Strava Client Secret
     REFRESH_TOKEN: '6d972e1b4681ac7cb1a0719c961492b5b9fef2d7' // Your Strava Refresh Token
 };
 

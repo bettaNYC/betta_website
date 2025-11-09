@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Strava Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .success { color: green; }
+        .error { color: red; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Strava API Connection Test</h1>
+    <button onclick="testConnection()">Test Connection</button>
+    <div id="result"></div>
+
+    <script>
+        async function testConnection() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>Testing connection...</p>';
+            
+            // Try multiple methods
+            const methods = [
+                { name: 'Fetch API', test: testWithFetch },
+                { name: 'XMLHttpRequest', test: testWithXHR }
+            ];
+            
+            for (const method of methods) {
+                try {
+                    console.log(`Trying ${method.name}...`);
+                    const result = await method.test();
+                    if (result.success) {
+                        resultDiv.innerHTML = `<div class="success">
+                            <h3>✅ Success! Connected using ${method.name}</h3>
+                            <p>Found ${result.data.length} runs</p>
+                            <pre>${JSON.stringify(result.data, null, 2)}</pre>
+                        </div>`;
+                        return;
+                    }
+                } catch (error) {
+                    console.error(`${method.name} failed:`, error);
+                }
+            }
+            
+            // If all methods failed, show detailed error
+            resultDiv.innerHTML = `<div class="error">
+                <h3>❌ All Connection Methods Failed</h3>
+                <p><strong>Possible causes:</strong></p>
+                <ul>
+                    <li>Proxy server not running: <code>python3 strava-proxy.py</code></li>
+                    <li>Browser blocking localhost connections</li>
+                    <li>Firewall or security software blocking port 5000</li>
+                    <li>Try accessing directly: <a href="http://localhost:5000/api/strava/activities?per_page=5" target="_blank">http://localhost:5000/api/strava/activities?per_page=5</a></li>
+                </ul>
+                <p><strong>Check browser console (F12) for detailed errors</strong></p>
+            </div>`;
+        }
+        
+        async function testWithFetch() {
+            const response = await fetch('http://localhost:5000/api/strava/activities?per_page=5', {
+                method: 'GET',
+                mode: 'cors',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            
+            if (!response.ok) {
+                const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+                throw new Error(`HTTP ${response.status}: ${JSON.stringify(error)}`);
+            }
+            
+            const data = await response.json();
+            return { success: true, data };
+        }
+        
+        function testWithXHR() {
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.open('GET', 'http://localhost:5000/api/strava/activities?per_page=5', true);
+                xhr.setRequestHeader('Accept', 'application/json');
+                
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        try {
+                            const data = JSON.parse(xhr.responseText);
+                            resolve({ success: true, data });
+                        } catch (e) {
+                            reject(new Error('Failed to parse JSON: ' + e.message));
+                        }
+                    } else {
+                        reject(new Error(`HTTP ${xhr.status}: ${xhr.statusText}`));
+                    }
+                };
+                
+                xhr.onerror = function() {
+                    reject(new Error('Network error - could not connect to server'));
+                };
+                
+                xhr.ontimeout = function() {
+                    reject(new Error('Request timeout'));
+                };
+                
+                xhr.timeout = 10000; // 10 second timeout
+                xhr.send();
+            });
+        }
+    </script>
+</body>
+</html>
+

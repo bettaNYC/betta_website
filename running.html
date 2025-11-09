@@ -5,204 +5,238 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Runs - Elisabetta Rappo</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Bandit Running Inspired Design */
+        .running-page {
+            min-height: 100vh;
+            background: #faf8f5;
+        }
+
+        .hero-section {
+            padding: 12rem 2rem 8rem;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero-title-large {
+            font-size: clamp(4rem, 10vw, 8rem);
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 2rem;
+            letter-spacing: -3px;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            color: #666;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 4rem;
+        }
+
+        .inspiration-text {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            color: #1a1a1a;
+            font-weight: 400;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto 6rem;
+            font-style: italic;
+        }
+
+        .race-announcement {
+            background: #1a1a1a;
+            color: #faf8f5;
+            padding: 4rem 3rem;
+            margin: 6rem auto;
+            max-width: 900px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .race-announcement::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #d4a574, transparent);
+        }
+
+        .race-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #d4a574;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .race-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .race-date {
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            color: #999;
+            font-weight: 300;
+        }
+
+        .strava-section {
+            padding: 8rem 2rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #666;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .strava-description {
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .strava-button {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            background: #1a1a1a;
+            color: #faf8f5;
+            text-decoration: none;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 2px solid #1a1a1a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .strava-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #d4a574;
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .strava-button:hover {
+            color: #1a1a1a;
+            border-color: #d4a574;
+        }
+
+        .strava-button:hover::before {
+            left: 0;
+        }
+
+        .strava-button-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        .quote-section {
+            padding: 6rem 2rem;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .quote-text {
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            color: #1a1a1a;
+            font-weight: 300;
+            line-height: 1.4;
+            font-style: italic;
+            margin-bottom: 2rem;
+        }
+
+        .quote-author {
+            font-size: 1rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 8rem 1.5rem 4rem;
+            }
+
+            .race-announcement {
+                padding: 3rem 2rem;
+                margin: 4rem 1rem;
+            }
+
+            .strava-section {
+                padding: 4rem 1.5rem;
+            }
+        }
+    </style>
 </head>
-<body>
+<body class="running-page">
     <nav class="nav">
         <a href="index.html" class="nav-link">Home</a>
         <a href="projects.html" class="nav-link">Projects</a>
     </nav>
 
-    <div class="hero">
-        <h1 class="hero-title">Elisabetta's Runs 🏃‍♀️</h1>
+    <div class="hero-section">
+        <h1 class="hero-title-large">EVOLVE<br>RUNNING</h1>
+        <p class="hero-subtitle">Find the balance → Stay true → Keep going</p>
+        <p class="inspiration-text">
+            Every run is a step forward. Every mile, a story. Every finish line, a beginning.
+        </p>
     </div>
 
-    <div class="container">
-        <div id="dashboard" class="dashboard">
-            <div class="stat-card">
-                <div class="stat-value" id="total-runs">-</div>
-                <div class="stat-label">Total Runs YTD</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="total-distance">-</div>
-                <div class="stat-label">Total Distance</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="avg-pace">-</div>
-                <div class="stat-label">Average Pace</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="total-time">-</div>
-                <div class="stat-label">Total Time</div>
-            </div>
-        </div>
+    <div class="race-announcement">
+        <div class="race-label">Upcoming Race</div>
+        <h2 class="race-title">Central Park<br>Half Marathon</h2>
+        <p class="race-date">December 13th, 2025</p>
     </div>
 
-    <div class="runs-section">
-        <div class="container">
-            <h2 class="section-title">Recent Runs</h2>
-            <div id="runs-container">
-                <div class="loading">Loading runs...</div>
-            </div>
-        </div>
+    <div class="strava-section">
+        <div class="section-label">Follow the Journey</div>
+        <p class="strava-description">
+            Track my training, races, and running adventures. Every step, every mile, every breakthrough.
+        </p>
+        <a href="https://www.strava.com/athletes/YOUR_STRAVA_ID" class="strava-button" target="_blank" rel="noopener noreferrer">
+            <span class="strava-button-text">View on Strava</span>
+        </a>
+    </div>
+
+    <div class="quote-section">
+        <p class="quote-text">
+            "The only way to do great work is to love what you do."
+        </p>
+        <p class="quote-author">— Running is my passion</p>
     </div>
 
     <div class="back-home">
         <a href="index.html" class="back-home-btn">Back to Home</a>
     </div>
-
-    <script src="strava-fetch.js"></script>
-    <script>
-        // Helper function to parse time string (e.g., "0:50:32") to seconds
-        function timeToSeconds(timeStr) {
-            const parts = timeStr.split(':').map(Number);
-            if (parts.length === 3) {
-                return parts[0] * 3600 + parts[1] * 60 + parts[2];
-            } else if (parts.length === 2) {
-                return parts[0] * 60 + parts[1];
-            }
-            return 0;
-        }
-
-        // Helper function to format seconds to time string (e.g., "1:23:45")
-        function secondsToTime(seconds) {
-            const hours = Math.floor(seconds / 3600);
-            const minutes = Math.floor((seconds % 3600) / 60);
-            const secs = seconds % 60;
-            if (hours > 0) {
-                return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-            }
-            return `${minutes}:${secs.toString().padStart(2, '0')}`;
-        }
-
-        // Helper function to format date (e.g., "2025-01-03" to "Jan 3, 2025")
-        function formatDate(dateStr) {
-            const date = new Date(dateStr);
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
-        }
-
-        // Calculate YTD stats
-        function calculateYTDStats(runs) {
-            const currentYear = new Date().getFullYear();
-            const ytdRuns = runs.filter(run => {
-                const runDate = new Date(run.date);
-                return runDate.getFullYear() === currentYear;
-            });
-
-            if (ytdRuns.length === 0) {
-                return {
-                    totalRuns: 0,
-                    totalDistance: 0,
-                    avgPace: '-',
-                    totalTime: 0
-                };
-            }
-
-            const totalRuns = ytdRuns.length;
-            const totalDistance = ytdRuns.reduce((sum, run) => sum + parseFloat(run.distance_km), 0);
-            const totalTimeSeconds = ytdRuns.reduce((sum, run) => sum + timeToSeconds(run.time), 0);
-            
-            // Calculate average pace
-            let avgPace = '-';
-            if (totalDistance > 0 && totalTimeSeconds > 0) {
-                const avgPaceSecondsPerKm = totalTimeSeconds / totalDistance;
-                const avgPaceMinutes = Math.floor(avgPaceSecondsPerKm / 60);
-                const avgPaceSeconds = Math.round(avgPaceSecondsPerKm % 60);
-                avgPace = `${avgPaceMinutes}:${avgPaceSeconds.toString().padStart(2, '0')}/km`;
-            }
-
-            return {
-                totalRuns,
-                totalDistance: totalDistance.toFixed(1),
-                avgPace,
-                totalTime: totalTimeSeconds
-            };
-        }
-
-        // Display YTD stats
-        function displayStats(stats) {
-            document.getElementById('total-runs').textContent = stats.totalRuns;
-            document.getElementById('total-distance').textContent = `${stats.totalDistance} km`;
-            document.getElementById('avg-pace').textContent = stats.avgPace;
-            document.getElementById('total-time').textContent = secondsToTime(stats.totalTime);
-        }
-
-        // Display runs
-        function displayRuns(runs) {
-            const container = document.getElementById('runs-container');
-            
-            if (runs.length === 0) {
-                container.innerHTML = '<div class="loading">No runs found.</div>';
-                return;
-            }
-
-            // Sort runs by date (newest first)
-            const sortedRuns = [...runs].sort((a, b) => {
-                return new Date(b.date) - new Date(a.date);
-            });
-
-            container.innerHTML = '<div class="runs-grid"></div>';
-            const grid = container.querySelector('.runs-grid');
-
-            sortedRuns.forEach(run => {
-                const card = document.createElement('div');
-                card.className = 'run-card';
-                
-                // Map display
-                let mapHtml = '<div class="run-map-placeholder">Map</div>';
-                if (run.map) {
-                    // If map is a URL, use it directly
-                    if (run.map.startsWith('http')) {
-                        mapHtml = `<div class="run-map-container"><img src="${run.map}" alt="Run map"></div>`;
-                    } else {
-                        // Otherwise use placeholder
-                        mapHtml = '<div class="run-map-placeholder">Map</div>';
-                    }
-                }
-                
-                card.innerHTML = `
-                    ${mapHtml}
-                    <div class="run-content">
-                        <div class="run-date">${formatDate(run.date)}</div>
-                        <div class="run-details">
-                            <div class="run-detail">
-                                <span class="run-detail-label">Distance</span>
-                                <span class="run-detail-value">${parseFloat(run.distance_km).toFixed(1)} km</span>
-                            </div>
-                            <div class="run-detail">
-                                <span class="run-detail-label">Time</span>
-                                <span class="run-detail-value">${run.time}</span>
-                            </div>
-                            <div class="run-detail">
-                                <span class="run-detail-label">Pace</span>
-                                <span class="run-detail-value">${run.pace}</span>
-                            </div>
-                            ${run.name ? `<div class="run-detail"><span class="run-detail-label">Name</span><span class="run-detail-value" style="font-size: 1rem;">${run.name}</span></div>` : ''}
-                        </div>
-                    </div>
-                `;
-                
-                grid.appendChild(card);
-            });
-        }
-
-        // Load and process runs data
-        async function initializeRuns() {
-            try {
-                const runs = await loadRuns();
-                
-                const stats = calculateYTDStats(runs);
-                displayStats(stats);
-                displayRuns(runs);
-            } catch (error) {
-                console.error('Error loading runs:', error);
-                document.getElementById('runs-container').innerHTML = 
-                    '<div class="error">Error loading runs data. Please try again later.</div>';
-            }
-        }
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', initializeRuns);
-    </script>
 </body>
 </html>

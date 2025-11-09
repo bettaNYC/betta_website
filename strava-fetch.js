@@ -13,68 +13,55 @@ const hasCredentials = STRAVA_CONFIG.CLIENT_ID &&
                        STRAVA_CONFIG.REFRESH_TOKEN;
 
 /**
- * Get a new access token from Strava using refresh token
- */
-async function getAccessToken() {
-    if (!hasCredentials) {
-        throw new Error('Strava credentials not configured');
-    }
-
-    const response = await fetch('https://www.strava.com/oauth/token', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            client_id: STRAVA_CONFIG.CLIENT_ID,
-            client_secret: STRAVA_CONFIG.CLIENT_SECRET,
-            refresh_token: STRAVA_CONFIG.REFRESH_TOKEN,
-            grant_type: 'refresh_token'
-        })
-    });
-
-    if (!response.ok) {
-        throw new Error('Failed to refresh access token');
-    }
-
-    const data = await response.json();
-    return data.access_token;
-}
-
-/**
- * Fetch activities from Strava API
+ * Fetch activities from Strava API via proxy server
+ * This avoids CORS issues by making requests through our backend proxy
  */
 async function fetchStravaActivities() {
     try {
-        const accessToken = await getAccessToken();
+        console.log('Attempting to fetch from Strava API...');
+        // Use same origin (port 8000) to avoid CORS issues
+        // If custom-server.py is running, use /api/strava/activities
+        // Otherwise, fall back to port 5000 proxy
+        let apiUrl = '/api/strava/activities?per_page=30';
+        let response;
         
-        // Fetch recent activities (last 30 activities)
-        const response = await fetch('https://www.strava.com/api/v3/athlete/activities?per_page=30', {
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
+        try {
+            // Try same-origin first (works with custom-server.py)
+            response = await fetch(apiUrl);
+        } catch (e) {
+            console.log('Same-origin failed, trying port 5000 proxy...');
+            // Fallback to separate proxy server
+            try {
+                response = await fetch('http://localhost:5000/api/strava/activities?per_page=30', {
+                    mode: 'cors',
+                    credentials: 'omit'
+                });
+            } catch (e2) {
+                console.log('Port 5000 failed, trying 127.0.0.1...');
+                response = await fetch('http://127.0.0.1:5000/api/strava/activities?per_page=30', {
+                    mode: 'cors',
+                    credentials: 'omit'
+                });
             }
-        });
-
-        if (!response.ok) {
-            throw new Error(`Strava API error: ${response.status}`);
         }
 
-        const activities = await response.json();
-        
-        // Filter only runs
-        const runs = activities.filter(activity => activity.type === 'Run');
-        
-        // Transform Strava data to our format
-        return runs.map(activity => ({
-            date: activity.start_date_local.split('T')[0],
-            distance_km: (activity.distance / 1000).toFixed(2),
-            time: formatStravaTime(activity.moving_time),
-            pace: calculatePace(activity.distance, activity.moving_time),
-            map: activity.map?.summary_polyline || null,
-            name: activity.name || 'Run'
-        }));
+        console.log('Response status:', response.status, response.statusText);
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            console.error('Error response:', errorData);
+            throw new Error(errorData.error || `Strava API error: ${response.status}`);
+        }
+
+        const runs = await response.json();
+        console.log('Successfully fetched runs:', runs.length, 'runs');
+        return runs;
     } catch (error) {
         console.error('Error fetching Strava data:', error);
+        // Check if it's a network/CORS error
+        if (error.message.includes('Failed to fetch') || error.message.includes('CORS') || error.name === 'TypeError') {
+            throw new Error('Cannot connect to Strava proxy server. Make sure strava-proxy.py is running on port 5000.');
+        }
         throw error;
     }
 }

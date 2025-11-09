@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Runs - Elisabetta Rappo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="projects.html" class="nav-link">Projects</a>
+    </nav>
+
+    <div class="hero">
+        <h1 class="hero-title">Elisabetta's Runs 🏃‍♀️</h1>
+    </div>
+
+    <div class="container">
+        <div id="dashboard" class="dashboard">
+            <div class="stat-card">
+                <div class="stat-value" id="total-runs">-</div>
+                <div class="stat-label">Total Runs YTD</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-distance">-</div>
+                <div class="stat-label">Total Distance</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avg-pace">-</div>
+                <div class="stat-label">Average Pace</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-time">-</div>
+                <div class="stat-label">Total Time</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="runs-section">
+        <div class="container">
+            <h2 class="section-title">Recent Runs</h2>
+            <div id="runs-container">
+                <div class="loading">Loading runs...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="back-home">
+        <a href="index.html" class="back-home-btn">Back to Home</a>
+    </div>
+
+    <script src="strava-fetch.js"></script>
+    <script>
+        // Helper function to parse time string (e.g., "0:50:32") to seconds
+        function timeToSeconds(timeStr) {
+            const parts = timeStr.split(':').map(Number);
+            if (parts.length === 3) {
+                return parts[0] * 3600 + parts[1] * 60 + parts[2];
+            } else if (parts.length === 2) {
+                return parts[0] * 60 + parts[1];
+            }
+            return 0;
+        }
+
+        // Helper function to format seconds to time string (e.g., "1:23:45")
+        function secondsToTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            if (hours > 0) {
+                return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+            return `${minutes}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Helper function to format date (e.g., "2025-01-03" to "Jan 3, 2025")
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+        }
+
+        // Calculate YTD stats
+        function calculateYTDStats(runs) {
+            const currentYear = new Date().getFullYear();
+            const ytdRuns = runs.filter(run => {
+                const runDate = new Date(run.date);
+                return runDate.getFullYear() === currentYear;
+            });
+
+            if (ytdRuns.length === 0) {
+                return {
+                    totalRuns: 0,
+                    totalDistance: 0,
+                    avgPace: '-',
+                    totalTime: 0
+                };
+            }
+
+            const totalRuns = ytdRuns.length;
+            const totalDistance = ytdRuns.reduce((sum, run) => sum + parseFloat(run.distance_km), 0);
+            const totalTimeSeconds = ytdRuns.reduce((sum, run) => sum + timeToSeconds(run.time), 0);
+            
+            // Calculate average pace
+            let avgPace = '-';
+            if (totalDistance > 0 && totalTimeSeconds > 0) {
+                const avgPaceSecondsPerKm = totalTimeSeconds / totalDistance;
+                const avgPaceMinutes = Math.floor(avgPaceSecondsPerKm / 60);
+                const avgPaceSeconds = Math.round(avgPaceSecondsPerKm % 60);
+                avgPace = `${avgPaceMinutes}:${avgPaceSeconds.toString().padStart(2, '0')}/km`;
+            }
+
+            return {
+                totalRuns,
+                totalDistance: totalDistance.toFixed(1),
+                avgPace,
+                totalTime: totalTimeSeconds
+            };
+        }
+
+        // Display YTD stats
+        function displayStats(stats) {
+            document.getElementById('total-runs').textContent = stats.totalRuns;
+            document.getElementById('total-distance').textContent = `${stats.totalDistance} km`;
+            document.getElementById('avg-pace').textContent = stats.avgPace;
+            document.getElementById('total-time').textContent = secondsToTime(stats.totalTime);
+        }
+
+        // Display runs
+        function displayRuns(runs) {
+            const container = document.getElementById('runs-container');
+            
+            if (runs.length === 0) {
+                container.innerHTML = '<div class="loading">No runs found.</div>';
+                return;
+            }
+
+            // Sort runs by date (newest first)
+            const sortedRuns = [...runs].sort((a, b) => {
+                return new Date(b.date) - new Date(a.date);
+            });
+
+            container.innerHTML = '<div class="runs-grid"></div>';
+            const grid = container.querySelector('.runs-grid');
+
+            sortedRuns.forEach(run => {
+                const card = document.createElement('div');
+                card.className = 'run-card';
+                
+                // Map display
+                let mapHtml = '<div class="run-map-placeholder">Map</div>';
+                if (run.map) {
+                    // If map is a URL, use it directly
+                    if (run.map.startsWith('http')) {
+                        mapHtml = `<div class="run-map-container"><img src="${run.map}" alt="Run map"></div>`;
+                    } else {
+                        // Otherwise use placeholder
+                        mapHtml = '<div class="run-map-placeholder">Map</div>';
+                    }
+                }
+                
+                card.innerHTML = `
+                    ${mapHtml}
+                    <div class="run-content">
+                        <div class="run-date">${formatDate(run.date)}</div>
+                        <div class="run-details">
+                            <div class="run-detail">
+                                <span class="run-detail-label">Distance</span>
+                                <span class="run-detail-value">${parseFloat(run.distance_km).toFixed(1)} km</span>
+                            </div>
+                            <div class="run-detail">
+                                <span class="run-detail-label">Time</span>
+                                <span class="run-detail-value">${run.time}</span>
+                            </div>
+                            <div class="run-detail">
+                                <span class="run-detail-label">Pace</span>
+                                <span class="run-detail-value">${run.pace}</span>
+                            </div>
+                            ${run.name ? `<div class="run-detail"><span class="run-detail-label">Name</span><span class="run-detail-value" style="font-size: 1rem;">${run.name}</span></div>` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Load and process runs data
+        async function initializeRuns() {
+            try {
+                const runs = await loadRuns();
+                
+                const stats = calculateYTDStats(runs);
+                displayStats(stats);
+                displayRuns(runs);
+            } catch (error) {
+                console.error('Error loading runs:', error);
+                document.getElementById('runs-container').innerHTML = 
+                    '<div class="error">Error loading runs data. Please try again later.</div>';
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializeRuns);
+    </script>
+</body>
+</html>

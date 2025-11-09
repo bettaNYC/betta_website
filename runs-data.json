@@ -1,0 +1,38 @@
+
+  {
+    "date": "2025-01-03",
+    "distance_km": 10.2,
+    "time": "0:50:32",
+    "pace": "4:57/km",
+    "map": "link-to-map-or-image"
+  },
+  {
+    "date": "2025-01-01",
+    "distance_km": 5.5,
+    "time": "0:26:15",
+    "pace": "4:46/km",
+    "map": "link-to-map-or-image"
+  },
+  {
+    "date": "2024-12-28",
+    "distance_km": 8.0,
+    "time": "0:38:40",
+    "pace": "4:50/km",
+    "map": "link-to-map-or-image"
+  },
+  {
+    "date": "2024-12-25",
+    "distance_km": 12.5,
+    "time": "1:02:30",
+    "pace": "5:00/km",
+    "map": "link-to-map-or-image"
+  },
+  {
+    "date": "2024-12-20",
+    "distance_km": 6.3,
+    "time": "0:30:10",
+    "pace": "4:47/km",
+    "map": "link-to-map-or-image"
+  }
+]
+

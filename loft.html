@@ -54,21 +54,30 @@
         .hero-section {
             position: relative;
             width: 100%;
-            margin-top: 80px;
+            height: 100vh;
+            margin-top: 0;
+            overflow: hidden;
         }
 
         .hero-image-container {
             width: 100%;
-            height: 70vh;
+            height: 100%;
             position: relative;
             overflow: hidden;
         }
 
         .hero-image {
             width: 100%;
-            height: 100%;
+            height: 120%;
             object-fit: cover;
             display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translateY(0);
+            transition: opacity 0.3s ease-out;
+            will-change: transform, opacity;
+            z-index: 1;
         }
 
         .hero-overlay {
@@ -83,14 +92,15 @@
             align-items: center;
             text-align: center;
             padding: 2rem;
-            background: rgba(245, 245, 243, 0.4);
+            background: rgba(245, 245, 243, 0.2);
+            z-index: 2;
         }
 
         .hero-title {
             font-size: clamp(3rem, 8vw, 6rem);
             font-weight: 700;
             color: #1a1a1a;
-            margin-bottom: 1rem;
+            margin-bottom: 0;
             letter-spacing: -2px;
             font-family: Georgia, serif;
         }
@@ -192,6 +202,19 @@
             display: block;
         }
 
+        .full-image {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .full-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+
         .image-placeholder {
             width: 100%;
             height: 100%;
@@ -283,11 +306,12 @@
             }
 
             .hero-section {
-                margin-top: 60px;
+                height: 100vh;
+                margin-top: 0;
             }
 
             .hero-image-container {
-                height: 50vh;
+                height: 100%;
             }
 
             .hero-overlay {
@@ -337,7 +361,6 @@
             <img src="bobby_living.jpeg" alt="The Loft" class="hero-image">
             <div class="hero-overlay">
                 <h1 class="hero-title">The Loft</h1>
-                <p class="hero-subtitle">A story of design, craftsmanship, and everyday creativity</p>
             </div>
         </div>
     </section>
@@ -345,36 +368,36 @@
     <!-- Introduction Section -->
     <section class="intro-section">
         <div class="intro-text">
-            <p>In the heart of Greenpoint, Brooklyn, a raw loft space became a canvas for something deeply personal. This renovation wasn't just about walls and floors — it was about creating a home that breathes with the rhythm of daily life, inspired by the quiet elegance of Italian design.</p>
-            <p>Together with my boyfriend, we spent months carefully selecting materials, mixing paint colors, and installing every detail ourselves. Each decision was deliberate, each texture considered. The result is a space that feels both timeless and alive.</p>
+            <p>Over the past two years, my boyfriend and I have been working on the space where we live — a loft in Greenpoint that we've shaped entirely on our own.</p>
+            <p>Coming from a business background, design was never my starting point, but it became part of my everyday life. I planned the layout, drew the kitchen, and followed the entire installation process from concept to completion.</p>
+            <p>It's a space that reflects both of us — practical, intentional, and personal.</p>
         </div>
     </section>
 
     <!-- Photo Gallery / Timeline -->
     <section class="gallery-section">
         <div class="gallery-grid">
-            <!-- Diptych 1: First night / Custom billy -->
+            <!-- First photo: First night -->
+            <div class="single-image">
+                <img src="first_night.jpeg" alt="First night">
+                <div class="diptych-caption">First night</div>
+            </div>
+
+            <!-- Diptych 1: Custom billy / Friends living -->
             <div class="diptych">
-                <div class="diptych-item">
-                    <img src="first_night.jpeg" alt="First night">
-                    <div class="diptych-caption">First night</div>
-                </div>
                 <div class="diptych-item">
                     <img src="custom_billy.jpeg" alt="Custom billy">
                     <div class="diptych-caption">Custom billy</div>
                 </div>
-            </div>
-
-            <!-- Diptych 2: Friends living / Food -->
-            <div class="diptych">
                 <div class="diptych-item">
                     <img src="friends_living.jpeg" alt="Friends living">
                     <div class="diptych-caption">Friends living</div>
                 </div>
-                <div class="diptych-item">
-                    <img src="food.jpeg" alt="Food">
-                    <div class="diptych-caption">Food</div>
-                </div>
+            </div>
+
+            <!-- Full image: Food -->
+            <div class="full-image">
+                <img src="food.jpeg" alt="Food">
             </div>
         </div>
     </section>
@@ -406,6 +429,53 @@
         <p class="quote-text">Design isn't just what we see — it's what we live in.</p>
         <p class="quote-location">Greenpoint, Brooklyn — 2025</p>
     </section>
+
+    <script>
+        // Parallax and fade effect for hero image
+        const heroImage = document.querySelector('.hero-image');
+        const heroSection = document.querySelector('.hero-section');
+        const introSection = document.querySelector('.intro-section');
+
+        function updateParallax() {
+            const scrollY = window.scrollY;
+            const heroHeight = heroSection.offsetHeight;
+            
+            // Parallax effect: image moves slower than scroll
+            if (scrollY < heroHeight) {
+                const parallaxOffset = scrollY * 0.5; // Adjust speed (0.5 = slower)
+                heroImage.style.transform = `translateY(${parallaxOffset}px)`;
+                
+                // Fade out effect as user scrolls
+                const fadeStart = heroHeight * 0.3; // Start fading at 30% of hero height
+                const fadeEnd = heroHeight * 0.9; // Fully faded at 90% of hero height
+                
+                if (scrollY > fadeStart) {
+                    const fadeProgress = Math.min((scrollY - fadeStart) / (fadeEnd - fadeStart), 1);
+                    heroImage.style.opacity = 1 - fadeProgress;
+                } else {
+                    heroImage.style.opacity = 1;
+                }
+            }
+        }
+
+        // Use requestAnimationFrame for smooth performance
+        let ticking = false;
+        function onScroll() {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    updateParallax();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }
+
+        window.addEventListener('scroll', onScroll);
+        window.addEventListener('resize', updateParallax);
+        
+        // Initial call
+        updateParallax();
+    </script>
 </body>
 </html>
 

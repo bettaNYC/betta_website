@@ -1,0 +1,15 @@
+{
+  "name": "betta-website",
+  "version": "1.0.0",
+  "description": "Personal website for Elisabetta Rappo",
+  "scripts": {
+    "dev": "lsof -ti:8000 | xargs kill -9 2>/dev/null || true && python3 custom-server.py",
+    "start": "python3 custom-server.py",
+    "server": "python3 server.py",
+    "kill-port": "lsof -ti:8000 | xargs kill -9 2>/dev/null || echo 'Port 8000 is free'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
+

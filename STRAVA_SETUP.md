@@ -147,3 +147,4 @@ The response will look like:
 **Required Permissions:**
 - `activity:read_all` - To read all your activities (including private ones)
 
+

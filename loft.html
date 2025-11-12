@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Loft - Elisabetta Rappo</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #F5F5F3;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 100;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #333333;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            background: #333333;
+            bottom: -4px;
+            left: 0;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            position: relative;
+            width: 100%;
+            margin-top: 80px;
+        }
+
+        .hero-image-container {
+            width: 100%;
+            height: 70vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            background: rgba(245, 245, 243, 0.4);
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+            letter-spacing: -2px;
+            font-family: Georgia, serif;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: #1a1a1a;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Introduction Section */
+        .intro-section {
+            padding: 6rem 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .intro-text {
+            font-size: clamp(1rem, 1.5vw, 1.2rem);
+            line-height: 1.8;
+            color: #555555;
+            text-align: left;
+        }
+
+        .intro-text p {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Photo Gallery / Timeline */
+        .gallery-section {
+            padding: 4rem 2rem 6rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .diptych {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            width: 100%;
+        }
+
+        .diptych-item {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .diptych-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .diptych-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(245, 245, 243, 0.95);
+            padding: 1rem 1.5rem;
+            font-size: 0.9rem;
+            color: #333333;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        .single-image {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .single-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #e8e6e3 0%, #d4d2cf 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Design Notes Section */
+        .design-notes-section {
+            padding: 6rem 2rem;
+            background: #ffffff;
+            margin: 4rem 0;
+        }
+
+        .design-notes-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 4rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .design-notes-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 3rem;
+            text-align: center;
+            font-family: Georgia, serif;
+        }
+
+        .design-note-item {
+            margin-bottom: 2.5rem;
+        }
+
+        .design-note-label {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .design-note-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #555555;
+        }
+
+        /* Closing Quote Section */
+        .quote-section {
+            padding: 8rem 2rem;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .quote-text {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            color: #1a1a1a;
+            font-weight: 300;
+            line-height: 1.4;
+            font-style: italic;
+            margin-bottom: 2rem;
+            font-family: Georgia, serif;
+        }
+
+        .quote-location {
+            font-size: 1rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav {
+                top: 1.5rem;
+                right: 1.5rem;
+                gap: 1.5rem;
+            }
+
+            .hero-section {
+                margin-top: 60px;
+            }
+
+            .hero-image-container {
+                height: 50vh;
+            }
+
+            .hero-overlay {
+                padding: 1.5rem;
+            }
+
+            .intro-section {
+                padding: 4rem 1.5rem;
+            }
+
+            .gallery-section {
+                padding: 3rem 1rem 4rem;
+            }
+
+            .diptych {
+                grid-template-columns: 1fr;
+            }
+
+            .diptych-item {
+                height: 400px;
+            }
+
+            .single-image {
+                height: 400px;
+            }
+
+            .design-notes-container {
+                padding: 3rem 2rem;
+            }
+
+            .quote-section {
+                padding: 5rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="projects.html" class="nav-link">Projects</a>
+        <a href="running.html" class="nav-link">Runs</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-image-container">
+            <img src="bobby_living.jpeg" alt="The Loft" class="hero-image">
+            <div class="hero-overlay">
+                <h1 class="hero-title">The Loft</h1>
+                <p class="hero-subtitle">A story of design, craftsmanship, and everyday creativity</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Introduction Section -->
+    <section class="intro-section">
+        <div class="intro-text">
+            <p>In the heart of Greenpoint, Brooklyn, a raw loft space became a canvas for something deeply personal. This renovation wasn't just about walls and floors — it was about creating a home that breathes with the rhythm of daily life, inspired by the quiet elegance of Italian design.</p>
+            <p>Together with my boyfriend, we spent months carefully selecting materials, mixing paint colors, and installing every detail ourselves. Each decision was deliberate, each texture considered. The result is a space that feels both timeless and alive.</p>
+        </div>
+    </section>
+
+    <!-- Photo Gallery / Timeline -->
+    <section class="gallery-section">
+        <div class="gallery-grid">
+            <!-- Diptych 1: First night / Custom billy -->
+            <div class="diptych">
+                <div class="diptych-item">
+                    <img src="first_night.jpeg" alt="First night">
+                    <div class="diptych-caption">First night</div>
+                </div>
+                <div class="diptych-item">
+                    <img src="custom_billy.jpeg" alt="Custom billy">
+                    <div class="diptych-caption">Custom billy</div>
+                </div>
+            </div>
+
+            <!-- Diptych 2: Friends living / Food -->
+            <div class="diptych">
+                <div class="diptych-item">
+                    <img src="friends_living.jpeg" alt="Friends living">
+                    <div class="diptych-caption">Friends living</div>
+                </div>
+                <div class="diptych-item">
+                    <img src="food.jpeg" alt="Food">
+                    <div class="diptych-caption">Food</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Design Notes Section -->
+    <section class="design-notes-section">
+        <div class="design-notes-container">
+            <h2 class="design-notes-title">Design Notes</h2>
+            
+            <div class="design-note-item">
+                <div class="design-note-label">Materials</div>
+                <div class="design-note-text">Natural clay paint in warm white and sand tones, European oak flooring and cabinetry, limestone countertops, handmade ceramic fixtures.</div>
+            </div>
+
+            <div class="design-note-item">
+                <div class="design-note-label">Palette</div>
+                <div class="design-note-text">A foundation of warm whites and creams, accented with terracotta clay, stone gray, and the natural honey tones of unstained oak.</div>
+            </div>
+
+            <div class="design-note-item">
+                <div class="design-note-label">Philosophy</div>
+                <div class="design-note-text">Warm minimalism rooted in the Italian principle of "less but better" — fewer elements, thoughtfully chosen and beautifully executed. Every piece serves both function and feeling, creating spaces that are calm yet full of character.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Closing Quote Section -->
+    <section class="quote-section">
+        <p class="quote-text">Design isn't just what we see — it's what we live in.</p>
+        <p class="quote-location">Greenpoint, Brooklyn — 2025</p>
+    </section>
+</body>
+</html>
+

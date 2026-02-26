@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In Tandem — Elisabetta Rappo</title>
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #faf8f5;
+            color: #1a1a1a;
+        }
+
+        /* Nav */
+        .nav {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 100;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #1a1a1a;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            background: currentColor;
+            bottom: -5px;
+            left: 0;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* ── Hero ── */
+        .hero {
+            min-height: 100vh;
+            background: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 8rem 4rem 6rem;
+            position: relative;
+        }
+
+        .hero-eyebrow {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #d4a574;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        .hero-title {
+            font-size: clamp(5rem, 13vw, 11rem);
+            font-weight: 900;
+            letter-spacing: -4px;
+            line-height: 0.92;
+            color: #faf8f5;
+            margin-bottom: 3rem;
+        }
+
+        .hero-title span {
+            color: #d4a574;
+        }
+
+        .hero-sub {
+            font-size: clamp(1rem, 1.8vw, 1.3rem);
+            color: #888;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            max-width: 560px;
+            line-height: 1.65;
+        }
+
+        /* ── Fundraising banner ── */
+        .fundraise {
+            background: #d4a574;
+            padding: 6rem 4rem;
+        }
+
+        .fundraise-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .fundraise-event-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: rgba(26,26,26,0.55);
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .fundraise-title {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+            line-height: 1.05;
+            color: #1a1a1a;
+            margin-bottom: 1.8rem;
+        }
+
+        .fundraise-desc {
+            font-size: 1.05rem;
+            line-height: 1.75;
+            color: rgba(26,26,26,0.72);
+            margin-bottom: 3rem;
+            max-width: 560px;
+        }
+
+        .fundraise-desc strong {
+            color: #1a1a1a;
+            font-weight: 700;
+        }
+
+        .goal-row {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .goal-amount {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            letter-spacing: -3px;
+            color: #1a1a1a;
+            line-height: 1;
+        }
+
+        .goal-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(26,26,26,0.55);
+            font-weight: 500;
+        }
+
+        .progress-track {
+            height: 3px;
+            background: rgba(26,26,26,0.15);
+            max-width: 400px;
+            margin-bottom: 0.8rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #1a1a1a;
+            width: 0%;
+        }
+
+        .progress-note {
+            font-size: 0.75rem;
+            color: rgba(26,26,26,0.5);
+            letter-spacing: 0.5px;
+        }
+
+        /* QR */
+        .qr-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .qr-panel img {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+            background: #fff;
+            padding: 14px;
+            display: block;
+        }
+
+        .qr-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(26,26,26,0.5);
+            font-weight: 500;
+            text-align: center;
+        }
+
+        /* ── About ── */
+        .about {
+            background: #1a1a1a;
+            padding: 8rem 4rem;
+        }
+
+        .about-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #d4a574;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .about-title {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+            line-height: 1;
+            color: #faf8f5;
+            margin-bottom: 5rem;
+        }
+
+        .about-title span {
+            color: #d4a574;
+        }
+
+        /* Mission strip */
+        .mission {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 3.5rem 0;
+            margin-bottom: 0;
+        }
+
+        .mission-text {
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            font-weight: 300;
+            line-height: 1.65;
+            color: #faf8f5;
+            max-width: 820px;
+        }
+
+        .mission-text strong {
+            font-weight: 700;
+            color: #d4a574;
+        }
+
+        .org-link {
+            display: inline-block;
+            margin-top: 2.5rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #d4a574;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(212,165,116,0.35);
+            padding-bottom: 3px;
+            transition: border-color 0.3s ease;
+        }
+
+        .org-link:hover {
+            border-color: #d4a574;
+        }
+
+        /* Info grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .info-cell {
+            padding: 3rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .info-cell:nth-child(odd) {
+            border-right: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .info-icon {
+            font-size: 1.3rem;
+            margin-bottom: 1.2rem;
+            display: block;
+        }
+
+        .info-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #d4a574;
+            font-weight: 500;
+            margin-bottom: 0.9rem;
+            display: block;
+        }
+
+        .info-text {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: rgba(250,248,245,0.65);
+        }
+
+        /* ── Closing ── */
+        .closing {
+            background: #faf8f5;
+            padding: 8rem 4rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .closing-quote {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 700;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            color: #1a1a1a;
+        }
+
+        .closing-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #666;
+        }
+
+        /* ── Back ── */
+        .back {
+            background: #faf8f5;
+            padding: 0 4rem 5rem;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: #1a1a1a;
+            color: #faf8f5;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 2px solid #1a1a1a;
+        }
+
+        .back-link:hover {
+            background: transparent;
+            color: #1a1a1a;
+        }
+
+        .back-link--outline {
+            background: transparent;
+            color: #1a1a1a;
+        }
+
+        .back-link--outline:hover {
+            background: #1a1a1a;
+            color: #faf8f5;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .hero {
+                padding: 8rem 2rem 5rem;
+            }
+
+            .fundraise {
+                padding: 5rem 2rem;
+            }
+
+            .fundraise-inner {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .qr-panel {
+                align-items: flex-start;
+            }
+
+            .about {
+                padding: 5rem 2rem;
+            }
+
+            .info-cell {
+                padding: 2rem;
+            }
+
+            .closing {
+                grid-template-columns: 1fr;
+                padding: 6rem 2rem;
+                gap: 2rem;
+            }
+
+            .back {
+                padding: 0 2rem 4rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .nav {
+                gap: 1.4rem;
+            }
+
+            .hero-title {
+                letter-spacing: -2px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-cell:nth-child(odd) {
+                border-right: none;
+            }
+
+            .back {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="projects.html" class="nav-link">Projects</a>
+        <a href="running.html" class="nav-link">Sport</a>
+        <a href="loft.html" class="nav-link">The Loft</a>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <span class="hero-eyebrow">TD Five Boro Bike Tour · NYC · 2025</span>
+        <h1 class="hero-title">In<span>&</span><br>Tandem</h1>
+        <p class="hero-sub">Cycling belongs to everyone. I'm riding to make sure it does — raising $1,000 so that people who are blind or have low vision can experience what it feels like to move through this city at speed.</p>
+    </section>
+
+    <!-- Fundraising -->
+    <section class="fundraise">
+        <div class="fundraise-inner">
+            <div>
+                <span class="fundraise-event-label">My fundraising goal</span>
+                <h2 class="fundraise-title">Riding for those<br>who can't see the road.</h2>
+                <p class="fundraise-desc">
+                    I'm riding the TD Five Boro Bike Tour with InTandem — a New York City non-profit that pairs sighted cyclists with visually impaired riders on tandem bikes, free of charge. My goal is to raise <strong>$1,000</strong> to help more people who are blind or have low vision experience the freedom, speed, and joy of cycling through every borough.
+                </p>
+                <div class="goal-row">
+                    <span class="goal-amount">$1,000</span>
+                    <span class="goal-label">Goal</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill"></div>
+                </div>
+                <p class="progress-note">Scan the QR code to donate — every dollar counts.</p>
+            </div>
+            <div class="qr-panel">
+                <img src="qr-donation.png" alt="Scan to donate to InTandem 5 Boro">
+                <span class="qr-label">Scan to donate</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- About InTandem -->
+    <section class="about">
+        <div class="about-inner">
+            <span class="section-label">About the Organization</span>
+            <h2 class="about-title">What is<br>In<span>&</span>Tandem?</h2>
+
+            <div class="mission">
+                <p class="mission-text">
+                    InTandem is a <strong>501(c)(3) non-profit</strong> based in New York City with one belief: cycling belongs to everyone. They pair sighted "captains" with visually impaired "stokers" on tandem bikes — giving people who are blind or have low vision the chance to ride free of charge across every borough of the city. <strong>No experience necessary. No cost. Just movement.</strong>
+                </p>
+                <a href="https://www.intandembike.org" class="org-link" target="_blank" rel="noopener noreferrer">Visit intandembike.org →</a>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-cell">
+                    <span class="info-icon">🚲</span>
+                    <span class="info-title">How it works</span>
+                    <p class="info-text">A sighted captain steers from the front while the visually impaired stoker pedals from the back. InTandem provides all the bikes and runs thorough training on safety, communication, and tandem technique before every ride goes out.</p>
+                </div>
+                <div class="info-cell">
+                    <span class="info-icon">🗽</span>
+                    <span class="info-title">Where they ride</span>
+                    <p class="info-text">Weekly group rides through Central Park and across the five boroughs, plus a full season of event rides — museums, food tours, cultural routes. They also join all major NYC rides: TD Five Boro, NY Century, Tour de Bronx, Tour de Staten Island.</p>
+                </div>
+                <div class="info-cell">
+                    <span class="info-icon">👁</span>
+                    <span class="info-title">Who they serve</span>
+                    <p class="info-text">People who are blind, have low vision, or cannot ride independently. For many stokers — especially those who lost their sight later in life — tandem cycling returns something they thought was gone forever: the joy of speed and motion.</p>
+                </div>
+                <div class="info-cell">
+                    <span class="info-icon">🌱</span>
+                    <span class="info-title">InTandem Youth</span>
+                    <p class="info-text">A spring program pairing sighted and vision-impaired teens, teaching leadership, teamwork, communication, and cycling skills together. The road is wider when you share it.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Closing -->
+    <div class="closing">
+        <p class="closing-quote">Sport is not a privilege.<br>It's a right.</p>
+        <p class="closing-text">Movement transformed my life — it gives me clarity, energy, and presence. I believe everyone deserves that. By riding with InTandem, I'm joining a community that refuses to leave anyone on the sideline. Help me reach the goal.</p>
+    </div>
+
+    <!-- Back -->
+    <div class="back">
+        <a href="index.html" class="back-link">Back to Home</a>
+        <a href="running.html" class="back-link back-link--outline">Back to Sport</a>
+    </div>
+
+</body>
+</html>

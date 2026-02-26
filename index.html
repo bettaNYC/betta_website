@@ -5,156 +5,316 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elisabetta Rappo</title>
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            font-family: Arial, sans-serif;
+        *, *::before, *::after {
             margin: 0;
-            background-color: #F5F5F3;
-            color: #333333;
+            padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #faf8f5;
+            color: #1a1a1a;
+            min-height: 100vh;
+        }
+
+        /* Masthead — top left, magazine nameplate */
+        .masthead {
+            position: fixed;
+            top: 1.85rem;
+            left: 2rem;
+            z-index: 100;
+            line-height: 1;
+        }
+
+        .masthead-name {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #1a1a1a;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* Nav — top right */
         .nav {
             position: fixed;
             top: 2rem;
             right: 2rem;
             z-index: 100;
+            display: flex;
+            gap: 2rem;
         }
+
         .nav-link {
             text-decoration: none;
-            color: #333333;
-            font-size: 0.9em;
+            color: #1a1a1a;
+            font-size: 0.85rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
+            font-weight: 500;
             position: relative;
             transition: color 0.3s ease;
         }
+
         .nav-link::after {
             content: '';
             position: absolute;
             width: 100%;
             height: 1px;
-            background: #333333;
-            bottom: -4px;
+            background: #1a1a1a;
+            bottom: -5px;
             left: 0;
             transform: scaleX(0);
+            transform-origin: left;
             transition: transform 0.3s ease;
         }
+
         .nav-link:hover::after {
             transform: scaleX(1);
         }
-        .container {
-            text-align: center;
-            max-width: 600px;
-            padding: 0 20px;
+
+        /* Fade-in wrapper */
+        .page {
             opacity: 0;
-            animation: fadeIn 1s ease-in forwards;
+            animation: fadeIn 0.9s ease-out 0.1s forwards;
         }
+
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-        h1 {
-            font-size: 2em;
-            font-weight: bold;
-            margin-bottom: 0.5em;
-            color: #222222;
+
+        /* Main — full-viewport centered column */
+        .main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 6rem 2rem 4rem;
         }
+
+        /* Editorial two-column: photo left, text right */
+        .editorial {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            column-gap: 3.5rem;
+            align-items: center;
+            max-width: 680px;
+            width: 100%;
+        }
+
         .profile-img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            margin-bottom: 1.5em;
+            display: block;
+            width: 160px;
+            height: 210px;
             object-fit: cover;
-            border: 3px solid #dcdcdc;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
         }
-        .tagline {
-            font-size: 1.2em;
-            color: #555555;
-            margin-bottom: 1.5em;
-            letter-spacing: 0.5px;
+
+        /* Text column */
+        .text-col {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
         }
-        .contact-text {
-            margin-top: 1.5em;
-            margin-bottom: 0.5em;
-            color: #777777;
-            font-size: 0.9em;
+
+        .eyebrow {
+            font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 3px;
+            color: #999;
+            font-weight: 500;
         }
+
+        .headline {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            line-height: 1.05;
+            color: #1a1a1a;
+        }
+
+        .tagline {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.6;
+            letter-spacing: 0.2px;
+            padding-top: 0.8rem;
+            border-top: 1px solid #e0ddd8;
+            margin-top: 0.4rem;
+        }
+
+        /* Divider */
+        .divider {
+            width: 100%;
+            max-width: 680px;
+            height: 1px;
+            background: #e0ddd8;
+            margin: 2.5rem 0 2rem;
+        }
+
+        /* Connect strip */
+        .connect {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            max-width: 680px;
+            width: 100%;
+        }
+
+        .connect-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #999;
+            font-weight: 500;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
         .social-links {
             display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin: 1em 0;
+            gap: 1.5rem;
+            align-items: center;
         }
+
         .social-link {
             text-decoration: none;
             position: relative;
+            display: flex;
+            align-items: center;
             transition: all 0.3s ease;
         }
+
         .social-icon {
-            width: 24px;
-            height: 24px;
-            stroke: #333333;
+            width: 22px;
+            height: 22px;
+            stroke: #1a1a1a;
             stroke-width: 1.5;
             fill: none;
             transition: all 0.3s ease;
         }
+
         .social-link::after {
             content: '';
             position: absolute;
             width: 100%;
             height: 1px;
-            background: #333333;
+            background: #1a1a1a;
             bottom: -6px;
             left: 0;
             transform: scaleX(0);
             transition: transform 0.3s ease;
         }
+
         .social-link:hover::after {
             transform: scaleX(1);
         }
+
         .social-link:hover .social-icon {
-            stroke: #000000;
+            stroke: #000;
             transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .masthead {
+                top: 1.5rem;
+                left: 1.5rem;
+            }
+
+            .nav {
+                top: 1.5rem;
+                right: 1.5rem;
+                gap: 1.4rem;
+            }
+
+            .editorial {
+                grid-template-columns: 1fr;
+                justify-items: center;
+                text-align: center;
+                row-gap: 1.8rem;
+            }
+
+            .profile-img {
+                width: 130px;
+                height: 170px;
+            }
+
+            .text-col {
+                align-items: center;
+            }
+
+            .connect {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .nav {
+                gap: 1rem;
+            }
+
+            .headline {
+                font-size: 1.75rem;
+            }
         }
     </style>
 </head>
 <body>
+
+    <a href="index.html" class="masthead">
+        <span class="masthead-name">Elisabetta Rappo</span>
+    </a>
+
     <nav class="nav">
         <a href="projects.html" class="nav-link">Projects</a>
-        <a href="running.html" class="nav-link">Runs</a>
+        <a href="running.html" class="nav-link">Sport</a>
         <a href="loft.html" class="nav-link">The Loft</a>
+        <a href="intandem.html" class="nav-link">In Tandem</a>
     </nav>
-    <div class="container">
-        <img src="elisabetta_rappino.jpeg" alt="Elisabetta Rappo" class="profile-img">
-        <h1>Elisabetta Rappo</h1>
-        <p class="tagline">Operations and Business Development in NYC</p>
-        <p class="contact-text">Connect</p>
-        <div class="social-links">
-            <a href="mailto:rappo.elisabetta@gmail.com" class="social-link" title="Email">
-                <svg class="social-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                    <polyline points="22,6 12,13 2,6"/>
-                </svg>
-            </a>
-            <a href="https://www.linkedin.com/in/elisabetta-rappo/" class="social-link" title="LinkedIn">
-                <svg class="social-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
-                    <rect x="2" y="9" width="4" height="12"/>
-                    <circle cx="4" cy="4" r="2"/>
-                </svg>
-            </a>
-        </div>
+
+    <div class="page">
+        <main class="main">
+
+            <div class="editorial">
+                <div class="photo-col">
+                    <img src="elisabetta_rappino.jpeg" alt="Elisabetta Rappo" class="profile-img">
+                </div>
+                <div class="text-col">
+                    <span class="eyebrow">New York City</span>
+                    <h1 class="headline">Elisabetta<br>Rappo</h1>
+                    <p class="tagline">Operations and Business Development in NYC</p>
+                </div>
+            </div>
+
+            <div class="divider" role="separator"></div>
+
+            <div class="connect">
+                <span class="connect-label">Connect</span>
+                <div class="social-links">
+                    <a href="mailto:rappo.elisabetta@gmail.com" class="social-link" title="Email">
+                        <svg class="social-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                    </a>
+                    <a href="https://www.linkedin.com/in/elisabetta-rappo/" class="social-link" title="LinkedIn" target="_blank" rel="noopener noreferrer">
+                        <svg class="social-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                            <rect x="2" y="9" width="4" height="12"/>
+                            <circle cx="4" cy="4" r="2"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+        </main>
     </div>
+
 </body>
 </html>

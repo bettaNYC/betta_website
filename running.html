@@ -646,20 +646,28 @@
             return '';
         }
 
-        async function loadActivities() {
-            const grid = document.getElementById('activities-grid');
+        async function fetchActivities() {
+            // Try live API first (works with local dev server)
             try {
                 const res = await fetch('/api/strava/activities?per_page=6');
-                if (!res.ok) throw new Error('API error');
-                const activities = await res.json();
+                if (res.ok) return await res.json();
+            } catch (_) {}
+            // Fall back to pre-built static file (GitHub Pages)
+            const res = await fetch('activities.json');
+            if (!res.ok) throw new Error('No activity data available');
+            return await res.json();
+        }
 
-                if (!activities.length) {
-                    grid.innerHTML = '<p class="activities-loading">No recent activities</p>';
-                    return;
-                }
+        function renderActivities(activities) {
+            const grid = document.getElementById('activities-grid');
 
-                grid.innerHTML = '';
-                activities.forEach((activity, i) => {
+            if (!activities.length) {
+                grid.innerHTML = '<p class="activities-loading">No recent activities</p>';
+                return;
+            }
+
+            grid.innerHTML = '';
+            activities.forEach((activity, i) => {
                     const card = document.createElement('div');
                     card.className = 'activity-card';
                     card.innerHTML = `
@@ -701,8 +709,15 @@
                         }
                     }
                 });
+        }
+
+        async function loadActivities() {
+            const grid = document.getElementById('activities-grid');
+            try {
+                const activities = await fetchActivities();
+                renderActivities(activities);
             } catch (err) {
-                grid.innerHTML = '<p class="activities-loading">Could not load activities — is the server running?</p>';
+                grid.innerHTML = '<p class="activities-loading">Could not load activities</p>';
             }
         }
 

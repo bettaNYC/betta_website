@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sport — Elisabetta Rappo</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         *, *::before, *::after {
             margin: 0;
@@ -214,6 +215,144 @@
             filter: grayscale(0%);
         }
 
+        /* ── Recent Activities ── */
+        .activities {
+            background: #f2efe9;
+            padding: 8rem 4rem;
+            border-top: 1px solid #d8d5d0;
+        }
+
+        .activities-header {
+            max-width: 1200px;
+            margin: 0 auto 4rem;
+        }
+
+        .activities-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #d4a574;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .activities-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            letter-spacing: -2px;
+            color: #1a1a1a;
+        }
+
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .activity-card {
+            background: #fff;
+            border: 1px solid #d8d5d0;
+            overflow: hidden;
+        }
+
+        .activity-map-container {
+            height: 220px;
+            background: #e8e4de;
+            position: relative;
+        }
+
+        .activity-map-container .leaflet-container {
+            height: 100%;
+            width: 100%;
+        }
+
+        .activity-no-map {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #bbb;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .activity-info {
+            padding: 1.8rem;
+        }
+
+        .activity-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .activity-type-badge {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #d4a574;
+            font-weight: 600;
+        }
+
+        .activity-date {
+            font-size: 0.75rem;
+            color: #999;
+        }
+
+        .activity-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 1.4rem;
+            letter-spacing: -0.3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .activity-stats {
+            display: flex;
+            gap: 2rem;
+            border-top: 1px solid #e8e4de;
+            padding-top: 1.2rem;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: -0.5px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #999;
+            margin-top: 0.35rem;
+        }
+
+        .activities-loading {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem;
+            color: #999;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
         /* ── Closing ── */
         .closing {
             background: #1a1a1a;
@@ -348,6 +487,14 @@
                 max-width: 100%;
             }
 
+            .activities {
+                padding: 5rem 1.5rem;
+            }
+
+            .activities-grid {
+                grid-template-columns: 1fr;
+            }
+
             .closing {
                 padding: 6rem 1.5rem;
             }
@@ -429,6 +576,17 @@
 
     </section>
 
+    <!-- Recent Activities -->
+    <section class="activities">
+        <div class="activities-header">
+            <span class="activities-label">Live from Strava</span>
+            <h2 class="activities-title">Recent Activity</h2>
+        </div>
+        <div class="activities-grid" id="activities-grid">
+            <p class="activities-loading">Loading activities…</p>
+        </div>
+    </section>
+
     <!-- Closing -->
     <section class="closing">
         <p class="closing-quote">Move.<br>Every day.</p>
@@ -440,5 +598,115 @@
         <a href="index.html" class="back-link">Back to Home</a>
     </div>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Decode Google-encoded polyline
+        function decodePolyline(encoded) {
+            const points = [];
+            let index = 0, lat = 0, lng = 0;
+            while (index < encoded.length) {
+                let shift = 0, result = 0, b;
+                do { b = encoded.charCodeAt(index++) - 63; result |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
+                lat += (result & 1) ? ~(result >> 1) : (result >> 1);
+                shift = 0; result = 0;
+                do { b = encoded.charCodeAt(index++) - 63; result |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
+                lng += (result & 1) ? ~(result >> 1) : (result >> 1);
+                points.push([lat / 1e5, lng / 1e5]);
+            }
+            return points;
+        }
+
+        function formatDate(dateStr) {
+            const d = new Date(dateStr + 'T00:00:00');
+            return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function getTypeLabel(type) {
+            const map = { Run: 'Running', Ride: 'Cycling', VirtualRide: 'Cycling',
+                          Swim: 'Swimming', Walk: 'Walking', Hike: 'Hiking',
+                          WeightTraining: 'Strength', Yoga: 'Yoga', Workout: 'Workout',
+                          RockClimbing: 'Climbing' };
+            return map[type] || type;
+        }
+
+        function getThirdStat(activity) {
+            if (activity.type === 'Run' && activity.pace && activity.pace !== '-') {
+                return `<div class="stat">
+                    <span class="stat-value">${activity.pace.replace('/km', '')}</span>
+                    <span class="stat-label">/km pace</span>
+                </div>`;
+            }
+            if ((activity.type === 'Ride' || activity.type === 'VirtualRide') && activity.moving_time > 0) {
+                const speed = (parseFloat(activity.distance_km) / (activity.moving_time / 3600)).toFixed(1);
+                return `<div class="stat">
+                    <span class="stat-value">${speed}</span>
+                    <span class="stat-label">km/h</span>
+                </div>`;
+            }
+            return '';
+        }
+
+        async function loadActivities() {
+            const grid = document.getElementById('activities-grid');
+            try {
+                const res = await fetch('/api/strava/activities?per_page=6');
+                if (!res.ok) throw new Error('API error');
+                const activities = await res.json();
+
+                if (!activities.length) {
+                    grid.innerHTML = '<p class="activities-loading">No recent activities</p>';
+                    return;
+                }
+
+                grid.innerHTML = '';
+                activities.forEach((activity, i) => {
+                    const card = document.createElement('div');
+                    card.className = 'activity-card';
+                    card.innerHTML = `
+                        <div class="activity-map-container" id="map-${i}">
+                            ${!activity.map ? '<div class="activity-no-map">No route data</div>' : ''}
+                        </div>
+                        <div class="activity-info">
+                            <div class="activity-meta">
+                                <span class="activity-type-badge">${getTypeLabel(activity.type)}</span>
+                                <span class="activity-date">${formatDate(activity.date)}</span>
+                            </div>
+                            <div class="activity-name">${activity.name}</div>
+                            <div class="activity-stats">
+                                <div class="stat">
+                                    <span class="stat-value">${activity.distance_km}</span>
+                                    <span class="stat-label">km</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-value">${activity.time}</span>
+                                    <span class="stat-label">time</span>
+                                </div>
+                                ${getThirdStat(activity)}
+                            </div>
+                        </div>`;
+                    grid.appendChild(card);
+
+                    if (activity.map) {
+                        const points = decodePolyline(activity.map);
+                        if (points.length > 0) {
+                            const leafletMap = L.map(`map-${i}`, {
+                                zoomControl: false, scrollWheelZoom: false,
+                                dragging: false, attributionControl: false
+                            });
+                            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                                maxZoom: 19
+                            }).addTo(leafletMap);
+                            const route = L.polyline(points, { color: '#d4a574', weight: 3, opacity: 0.9 }).addTo(leafletMap);
+                            leafletMap.fitBounds(route.getBounds(), { padding: [24, 24] });
+                        }
+                    }
+                });
+            } catch (err) {
+                grid.innerHTML = '<p class="activities-loading">Could not load activities — is the server running?</p>';
+            }
+        }
+
+        loadActivities();
+    </script>
 </body>
 </html>

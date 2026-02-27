@@ -93,23 +93,22 @@ class CustomHandler(BaseHTTPRequestHandler):
                 return
             
             activities = response.json()
-            
-            # Filter only runs
-            runs = [activity for activity in activities if activity.get('type') == 'Run']
-            
-            # Transform to our format
-            formatted_runs = []
-            for activity in runs:
-                formatted_runs.append({
+
+            # Transform to our format (all activity types)
+            formatted_activities = []
+            for activity in activities:
+                formatted_activities.append({
                     'date': activity['start_date_local'].split('T')[0],
                     'distance_km': f"{(activity['distance'] / 1000):.2f}",
                     'time': format_time(activity['moving_time']),
+                    'moving_time': activity['moving_time'],
                     'pace': calculate_pace(activity['distance'], activity['moving_time']),
                     'map': activity.get('map', {}).get('summary_polyline') or None,
-                    'name': activity.get('name') or 'Run'
+                    'name': activity.get('name') or activity.get('type', 'Activity'),
+                    'type': activity.get('type', 'Workout')
                 })
-            
-            self.send_json_response(formatted_runs)
+
+            self.send_json_response(formatted_activities)
             
         except Exception as e:
             self.send_error_response(500, {'error': str(e)})

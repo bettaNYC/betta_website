@@ -199,6 +199,21 @@
             display: block;
         }
 
+        /* ── Sport photo ── */
+        .sport-photo {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            display: block;
+            margin-bottom: 2.5rem;
+            filter: grayscale(15%);
+            transition: filter 0.4s ease;
+        }
+
+        .sport-card:hover .sport-photo {
+            filter: grayscale(0%);
+        }
+
         /* ── Closing ── */
         .closing {
             background: #1a1a1a;
@@ -262,14 +277,56 @@
             .sport-card {
                 padding: 4rem 2rem;
             }
+        }
 
         @media (max-width: 640px) {
+            .nav {
+                top: 1.2rem;
+                right: 1.2rem;
+                gap: 1rem;
+            }
+
             .nav-link {
+                font-size: 0.7rem;
+                letter-spacing: 1px;
                 color: #faf8f5;
+            }
+
+            .hero {
+                padding: 5.5rem 1.5rem 4rem;
+                min-height: 90vh;
+            }
+
+            .hero-eyebrow {
+                font-size: 0.65rem;
+                letter-spacing: 2px;
+            }
+
+            .hero-title {
+                letter-spacing: -2px;
+                margin-bottom: 2rem;
+            }
+
+            .hero-sub {
+                font-size: 0.95rem;
+                line-height: 1.7;
+            }
+
+            .hero-scroll {
+                left: 1.5rem;
+                bottom: 2rem;
+            }
+
+            .manifesto {
+                padding: 5rem 1.5rem;
             }
 
             .sports {
                 grid-template-columns: 1fr;
+            }
+
+            .sport-card {
+                padding: 3rem 1.5rem;
             }
 
             .sport-card:nth-child(2n) {
@@ -277,10 +334,27 @@
                 border-top: 1px solid #d8d5d0;
             }
 
-            .hero-title {
-                letter-spacing: -2px;
+            .sport-photo {
+                aspect-ratio: 3 / 2;
+                margin-bottom: 2rem;
             }
 
+            .sport-name {
+                font-size: 2rem;
+            }
+
+            .sport-desc {
+                font-size: 0.95rem;
+                max-width: 100%;
+            }
+
+            .closing {
+                padding: 6rem 1.5rem;
+            }
+
+            .back {
+                padding: 3rem 1.5rem;
+            }
         }
     </style>
 </head>
@@ -315,6 +389,7 @@
     <section class="sports">
 
         <div class="sport-card">
+            <img src="running_photo.jpeg" alt="Running through the city" class="sport-photo">
             <span class="sport-number">01</span>
             <h2 class="sport-name">Running</h2>
             <p class="sport-desc">
@@ -333,6 +408,7 @@
         </div>
 
         <div class="sport-card">
+            <img src="cycling.jpeg" alt="Cycling in Central Park" class="sport-photo">
             <span class="sport-number">03</span>
             <h2 class="sport-name">Cycling</h2>
             <p class="sport-desc">
@@ -342,6 +418,7 @@
         </div>
 
         <div class="sport-card">
+            <img src="climbing.jpeg" alt="Bouldering at the climbing gym" class="sport-photo">
             <span class="sport-number">04</span>
             <h2 class="sport-name">Climbing</h2>
             <p class="sport-desc">

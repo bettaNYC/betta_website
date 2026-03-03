@@ -19,7 +19,16 @@ def get_access_token():
         'grant_type': 'refresh_token'
     })
     res.raise_for_status()
-    return res.json()['access_token']
+    data = res.json()
+    new_refresh_token = data.get('refresh_token', '')
+    if new_refresh_token and new_refresh_token != REFRESH_TOKEN:
+        # Strava issued a new refresh token — update the GitHub secret manually:
+        # gh secret set STRAVA_REFRESH_TOKEN -b "<new_token>"
+        print(f"::warning::Strava issued a new refresh token. Update the STRAVA_REFRESH_TOKEN secret.")
+        # Write to a temp file so the workflow step can update the secret via gh CLI
+        with open('new_refresh_token.txt', 'w') as f:
+            f.write(new_refresh_token)
+    return data['access_token']
 
 def format_time(seconds):
     h = seconds // 3600

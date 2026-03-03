@@ -7,10 +7,15 @@ on:
     - cron: '0 */6 * * *'   # Every 6 hours
   workflow_dispatch:          # Manual trigger from GitHub UI
 
+# Secrets required at the repo level (Settings > Secrets and variables > Actions):
+#   STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, STRAVA_REFRESH_TOKEN
+# NOTE: no GitHub Environment is needed — use repo-level secrets directly.
+
 jobs:
   fetch-strava:
     runs-on: ubuntu-latest
-    environment: strava
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -28,6 +33,17 @@ jobs:
           STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
           STRAVA_REFRESH_TOKEN: ${{ secrets.STRAVA_REFRESH_TOKEN }}
         run: python3 fetch-activities.py
+
+      - name: Update refresh token secret if rotated
+        if: ${{ hashFiles('new_refresh_token.txt') != '' }}
+        env:
+          GH_TOKEN: ${{ secrets.STRAVA_SECRET_UPDATE_PAT }}
+          REPO: ${{ github.repository }}
+        run: |
+          NEW_TOKEN=$(cat new_refresh_token.txt)
+          gh secret set STRAVA_REFRESH_TOKEN -R "$REPO" -b "$NEW_TOKEN"
+          rm new_refresh_token.txt
+          echo "Refresh token updated in repo secrets."
 
       - name: Commit updated activities
         run: |

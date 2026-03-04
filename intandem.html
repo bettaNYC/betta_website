@@ -3,7 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>In Tandem — Elisabetta Rappo</title>
+
+    <!-- ─── SEO ─── -->
+    <title>Ride With InTandem — Elisabetta Rappo's Fundraiser</title>
+    <meta name="description" content="I'm riding the TD Five Boro Bike Tour to raise $1,000 for InTandem — a NYC non-profit giving people who are blind or have low vision the freedom to cycle. Donate or share.">
+
+    <!-- ─── Open Graph ─── -->
+    <!-- TODO: Replace og:image with a strong photo from the repo (e.g. cycling.jpeg) once confirmed -->
+    <meta property="og:title" content="Help Me Raise $1,000 for InTandem NYC">
+    <meta property="og:description" content="InTandem pairs sighted cyclists with visually impaired riders on tandem bikes — free of charge — across every NYC borough. I'm riding to fund more rides. Every dollar counts.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://elisabettarappo.com/intandem.html">
+    <!-- <meta property="og:image" content="https://elisabettarappo.com/cycling.jpeg"> -->
+
     <style>
         *, *::before, *::after {
             margin: 0;
@@ -17,7 +29,7 @@
             color: #1a1a1a;
         }
 
-        /* Nav */
+        /* ── Nav ── */
         .nav {
             position: fixed;
             top: 2rem;
@@ -98,6 +110,55 @@
             line-height: 1.65;
         }
 
+        /* Hero CTA buttons */
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: #d4a574;
+            color: #1a1a1a;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border: 2px solid #d4a574;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: #d4a574;
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: transparent;
+            color: #faf8f5;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 2px solid rgba(250,248,245,0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-secondary:hover {
+            border-color: #faf8f5;
+        }
+
         /* ── Fundraising banner ── */
         .fundraise {
             background: #d4a574;
@@ -110,7 +171,7 @@
             display: grid;
             grid-template-columns: 1fr auto;
             gap: 5rem;
-            align-items: center;
+            align-items: start;
         }
 
         .fundraise-event-label {
@@ -136,7 +197,7 @@
             font-size: 1.05rem;
             line-height: 1.75;
             color: rgba(26,26,26,0.72);
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             max-width: 560px;
         }
 
@@ -145,11 +206,23 @@
             font-weight: 700;
         }
 
+        /* Race date */
+        .race-date {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: rgba(26,26,26,0.5);
+            font-weight: 500;
+            margin-bottom: 2.5rem;
+            display: block;
+        }
+
+        /* Goal + progress */
         .goal-row {
             display: flex;
             align-items: baseline;
             gap: 1rem;
-            margin-bottom: 1.2rem;
+            margin-bottom: 0.6rem;
         }
 
         .goal-amount {
@@ -168,6 +241,29 @@
             font-weight: 500;
         }
 
+        /* Raised row */
+        .raised-row {
+            display: flex;
+            align-items: baseline;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+
+        .raised-amount {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: -0.5px;
+        }
+
+        .raised-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(26,26,26,0.5);
+            font-weight: 500;
+        }
+
         .progress-track {
             height: 3px;
             background: rgba(26,26,26,0.15);
@@ -179,27 +275,75 @@
         .progress-fill {
             height: 100%;
             background: #1a1a1a;
+            /* TODO: Update this percentage as donations come in (raised ÷ 1000 × 100) */
             width: 0%;
+            transition: width 0.8s ease;
         }
 
         .progress-note {
             font-size: 0.75rem;
             color: rgba(26,26,26,0.5);
             letter-spacing: 0.5px;
+            margin-bottom: 3rem;
         }
 
-        /* QR */
+        /* Donation tiers */
+        .tiers {
+            border-top: 1px solid rgba(26,26,26,0.18);
+            padding-top: 2rem;
+        }
+
+        .tiers-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: rgba(26,26,26,0.5);
+            font-weight: 500;
+            margin-bottom: 1.2rem;
+            display: block;
+        }
+
+        .tiers-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: rgba(26,26,26,0.18);
+        }
+
+        .tier {
+            background: #d4a574;
+            padding: 1.5rem 1rem;
+        }
+
+        .tier-amount {
+            font-size: 1.3rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            color: #1a1a1a;
+            display: block;
+            margin-bottom: 0.55rem;
+            line-height: 1;
+        }
+
+        .tier-desc {
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: rgba(26,26,26,0.65);
+        }
+
+        /* QR panel */
         .qr-panel {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1.2rem;
+            gap: 1rem;
             flex-shrink: 0;
+            padding-top: 0.5rem;
         }
 
         .qr-panel img {
-            width: 200px;
-            height: 200px;
+            width: 210px;
+            height: 210px;
             object-fit: contain;
             background: #fff;
             padding: 14px;
@@ -213,6 +357,63 @@
             color: rgba(26,26,26,0.5);
             font-weight: 500;
             text-align: center;
+        }
+
+        /* Direct donate link under QR */
+        .qr-link {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: rgba(26,26,26,0.55);
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(26,26,26,0.25);
+            padding-bottom: 2px;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .qr-link:hover {
+            color: #1a1a1a;
+            border-color: #1a1a1a;
+        }
+
+        /* ── Story / pull-quote ── */
+        .story {
+            background: #faf8f5;
+            padding: 8rem 4rem;
+            border-top: 1px solid #d8d5d0;
+        }
+
+        .story-inner {
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        .story-eyebrow {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #d4a574;
+            font-weight: 500;
+            margin-bottom: 2.5rem;
+            display: block;
+        }
+
+        .story-quote {
+            font-size: clamp(1.3rem, 2.2vw, 1.75rem);
+            font-weight: 300;
+            line-height: 1.6;
+            color: #1a1a1a;
+            border-left: 3px solid #d4a574;
+            padding-left: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .story-body {
+            font-size: 1rem;
+            line-height: 1.85;
+            color: #666;
         }
 
         /* ── About ── */
@@ -351,6 +552,81 @@
             color: #666;
         }
 
+        /* ── Share ── */
+        .share {
+            background: #f2efe9;
+            padding: 6rem 4rem;
+            border-top: 1px solid #d8d5d0;
+        }
+
+        .share-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .share-eyebrow {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #d4a574;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .share-title {
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            color: #1a1a1a;
+            margin-bottom: 0.8rem;
+        }
+
+        .share-sub {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+            max-width: 480px;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .share-btn {
+            display: inline-block;
+            padding: 0.9rem 2rem;
+            background: transparent;
+            color: #1a1a1a;
+            border: 2px solid #1a1a1a;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .share-btn:hover {
+            background: #1a1a1a;
+            color: #faf8f5;
+        }
+
+        .share-toast {
+            font-size: 0.75rem;
+            color: #d4a574;
+            letter-spacing: 1px;
+            margin-top: 1.2rem;
+            min-height: 1.2em;
+            display: block;
+        }
+
         /* ── Back ── */
         .back {
             background: #faf8f5;
@@ -390,30 +666,24 @@
 
         /* ── Responsive ── */
         @media (max-width: 900px) {
-            .hero {
-                padding: 8rem 2rem 5rem;
-            }
+            .hero { padding: 8rem 2rem 5rem; }
 
-            .fundraise {
-                padding: 5rem 2rem;
-            }
+            .fundraise { padding: 5rem 2rem; }
 
             .fundraise-inner {
                 grid-template-columns: 1fr;
                 gap: 3rem;
             }
 
-            .qr-panel {
-                align-items: flex-start;
-            }
+            .tiers-grid { grid-template-columns: repeat(2, 1fr); }
 
-            .about {
-                padding: 5rem 2rem;
-            }
+            .qr-panel { align-items: flex-start; }
 
-            .info-cell {
-                padding: 2rem;
-            }
+            .story { padding: 5rem 2rem; }
+
+            .about { padding: 5rem 2rem; }
+
+            .info-cell { padding: 2rem; }
 
             .closing {
                 grid-template-columns: 1fr;
@@ -421,31 +691,33 @@
                 gap: 2rem;
             }
 
-            .back {
-                padding: 0 2rem 4rem;
-            }
+            .share { padding: 5rem 2rem; }
+
+            .back { padding: 0 2rem 4rem; }
         }
 
         @media (max-width: 640px) {
-            .nav {
-                gap: 1.4rem;
-            }
+            .nav { gap: 1.4rem; }
 
-            .hero-title {
-                letter-spacing: -2px;
-            }
+            .hero-title { letter-spacing: -2px; }
 
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
+            .hero-cta { flex-direction: column; }
 
-            .info-cell:nth-child(odd) {
-                border-right: none;
-            }
+            .tiers-grid { grid-template-columns: 1fr 1fr; }
 
-            .back {
-                flex-direction: column;
-            }
+            .info-grid { grid-template-columns: 1fr; }
+
+            .info-cell:nth-child(odd) { border-right: none; }
+
+            .share-buttons { flex-direction: column; align-items: flex-start; }
+
+            .back { flex-direction: column; }
+        }
+
+        @media (max-width: 420px) {
+            .tiers-grid { grid-template-columns: 1fr 1fr; }
+
+            .qr-panel img { width: 180px; height: 180px; }
         }
     </style>
 </head>
@@ -458,39 +730,114 @@
         <a href="loft.html" class="nav-link">The Loft</a>
     </nav>
 
-    <!-- Hero -->
+    <!-- ─── Hero ─── -->
     <section class="hero">
-        <span class="hero-eyebrow">TD Five Boro Bike Tour · NYC · 2025</span>
+        <!-- TODO: Update year/date when registration opens for the next tour -->
+        <span class="hero-eyebrow">TD Five Boro Bike Tour · NYC · May 2025</span>
         <h1 class="hero-title">In<span>&</span><br>Tandem</h1>
-        <p class="hero-sub">Cycling belongs to everyone. I'm riding to make sure it does — raising $1,000 so that people who are blind or have low vision can experience what it feels like to move through this city at speed.</p>
+        <p class="hero-sub">Every ride InTandem runs gives a person who is blind or has low vision something most of us take for granted: the feeling of moving through this city at speed. I'm raising $1,000 to make more rides possible.</p>
+        <div class="hero-cta">
+            <!-- TODO: Replace href="#donate" with your actual fundraising page URL (e.g. givengain, justgiving, gofundme) -->
+            <!-- Add UTM params to track traffic: ?utm_source=website&utm_medium=hero_cta&utm_campaign=fiveboro2025 -->
+            <a href="#donate" class="btn-primary" aria-label="Donate to InTandem via fundraising page">Donate</a>
+            <button class="btn-secondary" id="hero-share-btn" aria-label="Copy fundraiser link to share">Share this page</button>
+        </div>
     </section>
 
-    <!-- Fundraising -->
-    <section class="fundraise">
+    <!-- ─── Fundraising ─── -->
+    <section class="fundraise" id="donate">
         <div class="fundraise-inner">
+
+            <!-- Left: text + goal + tiers -->
             <div>
                 <span class="fundraise-event-label">My fundraising goal</span>
                 <h2 class="fundraise-title">Riding for those<br>who can't see the road.</h2>
                 <p class="fundraise-desc">
                     I'm riding the TD Five Boro Bike Tour with InTandem — a New York City non-profit that pairs sighted cyclists with visually impaired riders on tandem bikes, free of charge. My goal is to raise <strong>$1,000</strong> to help more people who are blind or have low vision experience the freedom, speed, and joy of cycling through every borough.
                 </p>
+
+                <!-- TODO: Update race date once confirmed for the ride year -->
+                <span class="race-date" aria-label="Race date">Race day — May 4, 2025 · New York City</span>
+
                 <div class="goal-row">
                     <span class="goal-amount">$1,000</span>
                     <span class="goal-label">Goal</span>
                 </div>
-                <div class="progress-track">
-                    <div class="progress-fill"></div>
+
+                <!-- TODO: Update raised-amount text and progress-fill width as donations come in -->
+                <!-- Formula: width = (amount_raised / 1000 * 100)% -->
+                <div class="raised-row">
+                    <span class="raised-amount" id="raised-display">$0</span>
+                    <span class="raised-label">raised so far</span>
                 </div>
-                <p class="progress-note">Scan the QR code to donate — every dollar counts.</p>
+
+                <div class="progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Fundraising progress">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p class="progress-note">Scan the QR or use the link below — every dollar counts.</p>
+
+                <!-- Donation tiers -->
+                <div class="tiers">
+                    <span class="tiers-label">What your donation does</span>
+                    <div class="tiers-grid">
+                        <div class="tier">
+                            <span class="tier-amount">$25</span>
+                            <p class="tier-desc">Safety gear for one stoker — helmet fit, gloves, lights</p>
+                        </div>
+                        <div class="tier">
+                            <span class="tier-amount">$50</span>
+                            <p class="tier-desc">Covers a full day of tandem rides for the program</p>
+                        </div>
+                        <div class="tier">
+                            <span class="tier-amount">$100</span>
+                            <p class="tier-desc">Training + orientation for one new captain-stoker pair</p>
+                        </div>
+                        <div class="tier">
+                            <span class="tier-amount">$250</span>
+                            <p class="tier-desc">Keeps the program running for a full week of group rides</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- Right: QR + label + direct link -->
             <div class="qr-panel">
-                <img src="qr-donation.png" alt="Scan to donate to InTandem 5 Boro">
-                <span class="qr-label">Scan to donate</span>
+                <img
+                    src="qr-donation.png"
+                    alt="QR code — scan to donate to Elisabetta's InTandem fundraiser"
+                    width="210"
+                    height="210"
+                >
+                <span class="qr-label">Scan to give</span>
+                <!-- TODO: Replace href with the actual donation page URL -->
+                <a
+                    href="#"
+                    class="qr-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Direct donation link (alternative to QR code)"
+                >
+                    Or donate via link →
+                </a>
             </div>
+
         </div>
     </section>
 
-    <!-- About InTandem -->
+    <!-- ─── Story / pull-quote ─── -->
+    <section class="story">
+        <div class="story-inner">
+            <span class="story-eyebrow">Why this matters</span>
+            <blockquote class="story-quote">
+                "Sport gave me clarity when I needed it most. I can't imagine what it would mean to have that taken away — and then given back."
+            </blockquote>
+            <p class="story-body">
+                InTandem runs every week, rain or shine — pairing sighted captains with visually impaired stokers on tandem bikes across every borough of New York City. For many riders, it's not just about cycling. It's about independence, the sensation of speed, and being part of a community that shows up. Your donation funds the bikes, gear, and training that keep those rides happening — free, every week, for anyone who wants to ride.
+            </p>
+        </div>
+    </section>
+
+    <!-- ─── About InTandem ─── -->
     <section class="about">
         <div class="about-inner">
             <span class="section-label">About the Organization</span>
@@ -505,22 +852,22 @@
 
             <div class="info-grid">
                 <div class="info-cell">
-                    <span class="info-icon">🚲</span>
+                    <span class="info-icon" aria-hidden="true">🚲</span>
                     <span class="info-title">How it works</span>
                     <p class="info-text">A sighted captain steers from the front while the visually impaired stoker pedals from the back. InTandem provides all the bikes and runs thorough training on safety, communication, and tandem technique before every ride goes out.</p>
                 </div>
                 <div class="info-cell">
-                    <span class="info-icon">🗽</span>
+                    <span class="info-icon" aria-hidden="true">🗽</span>
                     <span class="info-title">Where they ride</span>
                     <p class="info-text">Weekly group rides through Central Park and across the five boroughs, plus a full season of event rides — museums, food tours, cultural routes. They also join all major NYC rides: TD Five Boro, NY Century, Tour de Bronx, Tour de Staten Island.</p>
                 </div>
                 <div class="info-cell">
-                    <span class="info-icon">👁</span>
+                    <span class="info-icon" aria-hidden="true">👁</span>
                     <span class="info-title">Who they serve</span>
                     <p class="info-text">People who are blind, have low vision, or cannot ride independently. For many stokers — especially those who lost their sight later in life — tandem cycling returns something they thought was gone forever: the joy of speed and motion.</p>
                 </div>
                 <div class="info-cell">
-                    <span class="info-icon">🌱</span>
+                    <span class="info-icon" aria-hidden="true">🌱</span>
                     <span class="info-title">InTandem Youth</span>
                     <p class="info-text">A spring program pairing sighted and vision-impaired teens, teaching leadership, teamwork, communication, and cycling skills together. The road is wider when you share it.</p>
                 </div>
@@ -528,17 +875,91 @@
         </div>
     </section>
 
-    <!-- Closing -->
+    <!-- ─── Closing ─── -->
     <div class="closing">
         <p class="closing-quote">Sport is not a privilege.<br>It's a right.</p>
         <p class="closing-text">Movement transformed my life — it gives me clarity, energy, and presence. I believe everyone deserves that. By riding with InTandem, I'm joining a community that refuses to leave anyone on the sideline. Help me reach the goal.</p>
     </div>
 
-    <!-- Back -->
+    <!-- ─── Share ─── -->
+    <section class="share" aria-label="Share this fundraiser">
+        <div class="share-inner">
+            <span class="share-eyebrow">Spread the word</span>
+            <h2 class="share-title">Can't donate? Share.</h2>
+            <p class="share-sub">Sharing takes 10 seconds and can bring in the next donation. Every post, message, and link helps.</p>
+            <div class="share-buttons">
+                <button class="share-btn" id="btn-copy-link" aria-label="Copy fundraiser page link to clipboard">Copy link</button>
+                <button class="share-btn" id="btn-linkedin" aria-label="Share on LinkedIn">Share on LinkedIn</button>
+                <button class="share-btn" id="btn-caption" aria-label="Copy Instagram caption to clipboard">Copy Instagram caption</button>
+            </div>
+            <span class="share-toast" id="share-toast" role="status" aria-live="polite"></span>
+        </div>
+    </section>
+
+    <!-- ─── Back ─── -->
     <div class="back">
         <a href="index.html" class="back-link">Back to Home</a>
         <a href="running.html" class="back-link back-link--outline">Back to Sport</a>
     </div>
+
+    <script>
+        // ─── Share captions ───────────────────────────────────────────────
+        // TODO: Update the caption and URL once your fundraising page is live
+        const FUNDRAISER_URL = window.location.href;
+        const INSTAGRAM_CAPTION = "I'm riding the TD Five Boro Bike Tour with InTandem — a NYC non-profit that gives people who are blind or have low vision the freedom to cycle, free of charge. Help me raise $1,000 so more rides can happen. Link in bio. 🚲 #InTandem #FiveBoro #CyclingForAll #NYC";
+
+        // ─── Toast helper ─────────────────────────────────────────────────
+        function showToast(msg) {
+            const toast = document.getElementById('share-toast');
+            toast.textContent = msg;
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(function() { toast.textContent = ''; }, 3500);
+        }
+
+        // ─── Copy link (hero + share section) ────────────────────────────
+        function copyLink() {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(FUNDRAISER_URL).then(function() {
+                    showToast('Link copied to clipboard.');
+                }).catch(function() {
+                    showToast('Copy failed — URL: ' + FUNDRAISER_URL);
+                });
+            } else {
+                // Fallback for older browsers
+                const el = document.createElement('textarea');
+                el.value = FUNDRAISER_URL;
+                el.style.position = 'fixed';
+                el.style.opacity = '0';
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+                showToast('Link copied to clipboard.');
+            }
+        }
+
+        document.getElementById('btn-copy-link').addEventListener('click', copyLink);
+        document.getElementById('hero-share-btn').addEventListener('click', copyLink);
+
+        // ─── LinkedIn share ───────────────────────────────────────────────
+        document.getElementById('btn-linkedin').addEventListener('click', function() {
+            var shareUrl = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(FUNDRAISER_URL);
+            window.open(shareUrl, '_blank', 'noopener,width=600,height=520');
+        });
+
+        // ─── Instagram: copy caption ──────────────────────────────────────
+        document.getElementById('btn-caption').addEventListener('click', function() {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(INSTAGRAM_CAPTION).then(function() {
+                    showToast('Caption copied — open Instagram and paste it into your post.');
+                }).catch(function() {
+                    showToast('Could not copy. Paste manually: ' + INSTAGRAM_CAPTION);
+                });
+            } else {
+                showToast('Caption: ' + INSTAGRAM_CAPTION);
+            }
+        });
+    </script>
 
 </body>
 </html>

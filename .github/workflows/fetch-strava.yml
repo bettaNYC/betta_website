@@ -1,11 +1,13 @@
 name: Fetch Strava Activities
 
+# DISABLED (Aug 2026): Strava is moving API access to subscriber-only, so the
+# automatic fetch no longer works without a paid subscription. Automatic
+# triggers (push + 6-hourly schedule) have been removed so this stops failing.
+# Activities are now maintained manually via gpx-to-activities.py — see that
+# file. This workflow is kept (manual-only) in case API access is restored.
+
 on:
-  push:
-    branches: [main]
-  schedule:
-    - cron: '0 */6 * * *'   # Every 6 hours
-  workflow_dispatch:          # Manual trigger from GitHub UI
+  workflow_dispatch:          # Manual trigger from GitHub UI only
 
 # Secrets required at the repo level (Settings > Secrets and variables > Actions):
 #   STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, STRAVA_REFRESH_TOKEN

@@ -269,15 +269,54 @@
             width: 100%;
         }
 
-        .activity-no-map {
+        /* Shown when an activity has no public route (e.g. follower-only /
+           start & end hidden). A styled hero instead of an empty box. */
+        .activity-hero {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100%;
-            color: #bbb;
-            font-size: 0.7rem;
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 28% 22%, rgba(212,165,116,0.20), transparent 60%),
+                radial-gradient(circle at 82% 82%, rgba(212,165,116,0.12), transparent 55%),
+                #ece8e1;
+        }
+        .activity-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 220'%3E%3Cpath d='M18 176 C 60 120 92 202 140 138 S 224 58 262 120 S 344 182 382 88' fill='none' stroke='%23d4a574' stroke-width='3' stroke-linecap='round' stroke-dasharray='1 11'/%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
+            opacity: 0.55;
+        }
+        .activity-hero-distance {
+            position: relative;
+            display: flex;
+            align-items: baseline;
+            gap: 0.35rem;
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -1.5px;
+            color: #1a1a1a;
+        }
+        .activity-hero-distance span {
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0;
+            color: #d4a574;
+        }
+        .activity-hero-label {
+            position: relative;
+            margin-top: 0.75rem;
+            font-size: 0.6rem;
             text-transform: uppercase;
             letter-spacing: 3px;
+            color: #a89f92;
         }
 
         .activity-info {
@@ -671,7 +710,10 @@
                     card.className = 'activity-card';
                     card.innerHTML = `
                         <div class="activity-map-container" id="map-${i}">
-                            ${!activity.map ? '<div class="activity-no-map">No route data</div>' : ''}
+                            ${!activity.map ? `<div class="activity-hero">
+                                <div class="activity-hero-distance">${activity.distance_km}<span>km</span></div>
+                                <div class="activity-hero-label">Route private</div>
+                            </div>` : ''}
                         </div>
                         <div class="activity-info">
                             <div class="activity-meta">

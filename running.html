@@ -244,6 +244,90 @@
             color: #1a1a1a;
         }
 
+        /* Year-to-date summary band */
+        .ytd {
+            max-width: 1200px;
+            margin: 0 auto 1.5rem;
+            background: #1a1a1a;
+            color: #f2efe9;
+            padding: 3rem 3rem;
+        }
+
+        .ytd-eyebrow {
+            display: block;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #d4a574;
+            font-weight: 500;
+            margin-bottom: 1.8rem;
+        }
+
+        .ytd-stats {
+            display: flex;
+            align-items: center;
+            gap: 3.5rem;
+        }
+
+        .ytd-stat {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .ytd-value {
+            display: flex;
+            align-items: baseline;
+            gap: 0.4rem;
+            font-size: clamp(2.4rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -2px;
+            color: #fff;
+        }
+
+        .ytd-unit {
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 0;
+            color: #d4a574;
+        }
+
+        .ytd-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #a89f92;
+        }
+
+        .ytd-divider {
+            align-self: stretch;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Honest note about the (now manual) feed */
+        .activities-note {
+            max-width: 1200px;
+            margin: 0 auto 4rem;
+            background: #fff;
+            border: 1px solid #d8d5d0;
+            border-left: 3px solid #d4a574;
+            padding: 1.4rem 1.7rem;
+        }
+
+        .activities-note p {
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.65;
+            color: #6b6b6b;
+        }
+
+        .activities-note strong {
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
         .activities-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -530,6 +614,22 @@
                 padding: 5rem 1.5rem;
             }
 
+            .ytd {
+                padding: 2.2rem 1.6rem;
+            }
+
+            .ytd-stats {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.6rem;
+            }
+
+            .ytd-divider {
+                width: 48px;
+                height: 1px;
+                align-self: flex-start;
+            }
+
             .activities-grid {
                 grid-template-columns: 1fr;
             }
@@ -617,8 +717,25 @@
     <!-- Recent Activities -->
     <section class="activities">
         <div class="activities-header">
-            <span class="activities-label">Live from Strava</span>
+            <span class="activities-label">2026 · From Strava</span>
             <h2 class="activities-title">Recent Activity</h2>
+        </div>
+        <div class="ytd">
+            <span class="ytd-eyebrow">This year so far</span>
+            <div class="ytd-stats">
+                <div class="ytd-stat">
+                    <span class="ytd-value">578<span class="ytd-unit">km</span></span>
+                    <span class="ytd-label">Running</span>
+                </div>
+                <div class="ytd-divider"></div>
+                <div class="ytd-stat">
+                    <span class="ytd-value">1,344<span class="ytd-unit">km</span></span>
+                    <span class="ytd-label">Cycling</span>
+                </div>
+            </div>
+        </div>
+        <div class="activities-note">
+            <p><strong>A note on the feed —</strong> Since June 30, Strava has kept its API behind a paid subscription, which I don't have. This page can no longer fetch my activities automatically, so I added the two August runs by hand. The feed may go quiet now and then, but the running won't stop.</p>
         </div>
         <div class="activities-grid" id="activities-grid">
             <p class="activities-loading">Loading activities…</p>

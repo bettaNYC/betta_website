@@ -526,14 +526,13 @@
         // ISO first (YYYY-MM-DD)
         let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
         if (m) return new Date(+m[1], +m[2] - 1, +m[3]);
-        // D/M/Y or M/D/Y with / or . or -
+        // MM/DD/YYYY (US format the sheet uses); also tolerant of . or - separators
         m = s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})/);
         if (m) {
-            let a = +m[1], b = +m[2], y = +m[3];
+            let mon = +m[1], day = +m[2], y = +m[3];
             if (y < 100) y += 2000;
-            // If first field can't be a month, treat as day/month (European)
-            const day = a > 12 ? a : (b > 12 ? b : a);
-            const mon = a > 12 ? b : (b > 12 ? a : b);
+            // Safety: if the first field can't be a month but the second can, it was day-first — swap.
+            if (mon > 12 && day <= 12) { const t = mon; mon = day; day = t; }
             return new Date(y, mon - 1, day);
         }
         const d = new Date(s);

@@ -5,881 +5,862 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sport — Elisabetta Rappo</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
     <style>
-        *, *::before, *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #faf8f5;
+            --ink: #1a1a1a;
+            --muted: #666;
+            --faint: #999;
+            --line: #e0ddd8;
+            --accent: #d4a574;
+            --card: #ffffff;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-            background-color: #faf8f5;
-            color: #1a1a1a;
+            background-color: var(--bg);
+            color: var(--ink);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Nav */
-        .nav {
-            position: fixed;
-            top: 2rem;
-            right: 2rem;
-            z-index: 100;
-            display: flex;
-            gap: 2rem;
-        }
+        .wrap { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
 
-        .nav-link {
-            text-decoration: none;
-            color: #faf8f5;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 500;
-            position: relative;
+        /* Masthead + nav (matches home / projects) */
+        .masthead { position: fixed; top: 1.85rem; left: 2rem; z-index: 100; line-height: 1; text-decoration: none; }
+        .masthead-name {
+            font-size: 0.85rem; font-weight: 700; letter-spacing: 3px;
+            text-transform: uppercase; color: #faf8f5; text-decoration: none; display: block;
             transition: color 0.3s ease;
         }
-
-        .nav-link--dark {
-            color: #1a1a1a;
+        .nav { position: fixed; top: 2rem; right: 2rem; z-index: 100; display: flex; gap: 2rem; }
+        .nav-link {
+            text-decoration: none; color: #faf8f5; font-size: 0.85rem;
+            text-transform: uppercase; letter-spacing: 2px; font-weight: 500;
+            position: relative; transition: color 0.3s ease;
         }
-
         .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 1px;
-            background: currentColor;
-            bottom: -5px;
-            left: 0;
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.3s ease;
+            content: ''; position: absolute; width: 100%; height: 1px; background: currentColor;
+            bottom: -5px; left: 0; transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease;
         }
-
-        .nav-link:hover::after {
-            transform: scaleX(1);
-        }
+        .nav-link:hover::after { transform: scaleX(1); }
+        .nav-link.current::after { transform: scaleX(1); background: var(--accent); }
+        /* Nav turns dark once scrolled past the dark hero */
+        body.scrolled .masthead-name,
+        body.scrolled .nav-link { color: var(--ink); }
 
         /* ── Hero ── */
         .hero {
-            position: relative;
-            min-height: 100vh;
-            background: #1a1a1a;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 8rem 4rem 6rem;
+            position: relative; min-height: 100vh; background: #141414;
+            display: flex; flex-direction: column; justify-content: center;
+            padding: 8rem 4rem 6rem; overflow: hidden;
         }
-
+        .hero::after {
+            content: ""; position: absolute; inset: 0; pointer-events: none;
+            background:
+                radial-gradient(circle at 78% 18%, rgba(212,165,116,0.16), transparent 55%),
+                radial-gradient(circle at 12% 88%, rgba(212,165,116,0.08), transparent 50%);
+        }
+        .hero-inner { position: relative; z-index: 1; }
         .hero-eyebrow {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: #d4a574;
-            font-weight: 500;
-            margin-bottom: 2rem;
+            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 4px;
+            color: var(--accent); font-weight: 500; margin-bottom: 2rem;
         }
-
         .hero-title {
-            font-size: clamp(5rem, 14vw, 13rem);
-            font-weight: 900;
-            letter-spacing: -4px;
-            line-height: 0.92;
-            color: #faf8f5;
-            margin-bottom: 3rem;
+            font-size: clamp(4.5rem, 14vw, 13rem); font-weight: 900; letter-spacing: -4px;
+            line-height: 0.9; color: #faf8f5; margin-bottom: 2.5rem;
         }
-
         .hero-sub {
-            font-size: clamp(1rem, 1.8vw, 1.3rem);
-            color: #999;
-            font-weight: 300;
-            letter-spacing: 1px;
-            max-width: 520px;
-            line-height: 1.6;
+            font-size: clamp(1rem, 1.8vw, 1.3rem); color: #a5a5a5; font-weight: 300;
+            letter-spacing: 1px; max-width: 540px; line-height: 1.6;
         }
-
         .hero-scroll {
-            position: absolute;
-            bottom: 3rem;
-            left: 4rem;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: #555;
-            font-weight: 500;
+            position: absolute; bottom: 3rem; left: 4rem; z-index: 1;
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 3px; color: #666; font-weight: 500;
         }
 
         /* ── Manifesto ── */
-        .manifesto {
-            padding: 8rem 2rem;
-            background: #faf8f5;
-        }
-
-        .manifesto-inner {
-            max-width: 760px;
-            margin: 0 auto;
-        }
-
+        .manifesto { padding: 7rem 0; }
+        .manifesto-inner { max-width: 780px; margin: 0 auto; }
         .manifesto-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: #d4a574;
-            font-weight: 500;
-            margin-bottom: 2.5rem;
-            display: block;
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 4px;
+            color: var(--accent); font-weight: 600; margin-bottom: 2rem; display: block;
         }
-
         .manifesto-text {
-            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-            font-weight: 300;
-            line-height: 1.65;
-            color: #1a1a1a;
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem); font-weight: 300; line-height: 1.6; color: var(--ink);
         }
+        .manifesto-text strong { font-weight: 700; }
 
-        .manifesto-text strong {
-            font-weight: 700;
+        /* ── Section scaffolding (matches projects) ── */
+        .sec-head { max-width: 720px; margin-bottom: 2.4rem; }
+        .sec-num {
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 3px;
+            color: var(--accent); font-weight: 700;
         }
+        .sec-head h2 {
+            font-size: clamp(1.9rem, 4.4vw, 2.6rem); font-weight: 700; letter-spacing: -0.8px;
+            line-height: 1.06; margin: 0.5rem 0 0.9rem;
+        }
+        .sec-head p { color: var(--muted); font-size: 1.02rem; max-width: 640px; }
 
         /* ── Sports grid ── */
-        .sports {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        .sports { padding: 6rem 0; border-top: 1px solid var(--line); }
+        .sports-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 2.6rem;
         }
-
         .sport-card {
-            padding: 5rem 4rem;
-            border-top: 1px solid #d8d5d0;
-            position: relative;
+            background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+            overflow: hidden; display: flex; flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
-        .sport-card:nth-child(2n) {
-            background: #ffffff;
-            border-left: 1px solid #d8d5d0;
-        }
-
-        .sport-card:nth-child(2n-1) {
-            background: #faf8f5;
-        }
-
-        .sport-number {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: #d4a574;
-            font-weight: 500;
-            margin-bottom: 1.5rem;
-            display: block;
-        }
-
-        .sport-name {
-            font-size: clamp(2rem, 4vw, 2.8rem);
-            font-weight: 700;
-            letter-spacing: -1.5px;
-            line-height: 1;
-            text-transform: uppercase;
-            color: #1a1a1a;
-            margin-bottom: 2rem;
-        }
-
-        .sport-desc {
-            font-size: 1rem;
-            line-height: 1.8;
-            color: #555;
-            margin-bottom: 2.5rem;
-            max-width: 420px;
-        }
-
-        .sport-tag {
-            font-size: 0.85rem;
-            font-style: italic;
-            color: #999;
-            letter-spacing: 0.5px;
-            border-top: 1px solid #e0ddd8;
-            padding-top: 1.2rem;
-            display: block;
-        }
-
-        /* ── Sport photo ── */
+        .sport-card:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(0,0,0,0.07); }
+        .sport-photo-wrap { aspect-ratio: 16 / 10; overflow: hidden; background: #ece8e1; }
         .sport-photo {
-            width: 100%;
-            aspect-ratio: 4 / 3;
-            object-fit: cover;
-            display: block;
-            margin-bottom: 2.5rem;
-            filter: grayscale(15%);
-            transition: filter 0.4s ease;
+            width: 100%; height: 100%; object-fit: cover; display: block;
+            filter: grayscale(18%); transition: transform 0.6s ease, filter 0.4s ease;
+        }
+        .sport-card:hover .sport-photo { filter: grayscale(0%); transform: scale(1.04); }
+        .sport-body { padding: 1.8rem 1.9rem 2rem; display: flex; flex-direction: column; flex: 1; }
+        .sport-top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 0.7rem; }
+        .sport-number { font-size: 0.7rem; letter-spacing: 3px; color: var(--accent); font-weight: 700; }
+        .sport-tag { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 2px; color: var(--faint); font-weight: 600; }
+        .sport-name {
+            font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: 700; letter-spacing: -1px;
+            text-transform: uppercase; line-height: 1; margin-bottom: 0.9rem;
+        }
+        .sport-desc { font-size: 0.96rem; line-height: 1.7; color: var(--muted); }
+
+        /* No-photo sport gets a graphic tile instead of a flat gap */
+        .sport-graphic {
+            aspect-ratio: 16 / 10; position: relative; overflow: hidden;
+            background:
+                radial-gradient(circle at 30% 28%, rgba(212,165,116,0.22), transparent 60%),
+                radial-gradient(circle at 78% 80%, rgba(212,165,116,0.12), transparent 55%),
+                #ece8e1;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .sport-graphic::before {
+            content: ""; position: absolute; inset: 0; opacity: 0.5;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 250'%3E%3Cpath d='M20 180 C 70 120 110 210 160 150 S 250 70 300 130 S 370 190 390 110' fill='none' stroke='%23d4a574' stroke-width='3' stroke-linecap='round' stroke-dasharray='1 12'/%3E%3C/svg%3E");
+            background-size: cover; background-position: center;
+        }
+        .sport-graphic span {
+            position: relative; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 3px;
+            color: #a08a6d; font-weight: 700;
         }
 
-        .sport-card:hover .sport-photo {
-            filter: grayscale(0%);
+        /* ── Vitals / Daily health lab (ren.so-inspired) ── */
+        .vitals { padding: 6rem 0; border-top: 1px solid var(--line); background: #f4f1ec; }
+        .vitals-grid {
+            display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 1.2rem; margin-bottom: 1.2rem;
         }
-
-        /* ── Recent Activities ── */
-        .activities {
-            background: #f2efe9;
-            padding: 8rem 4rem;
-            border-top: 1px solid #d8d5d0;
+        .vital-card {
+            background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+            padding: 1.7rem 1.8rem; display: flex; flex-direction: column; justify-content: center;
         }
-
-        .activities-header {
-            max-width: 1200px;
-            margin: 0 auto 4rem;
+        .vital-hero { background: #16130f; border-color: #16130f; color: #f3ede4; }
+        .vital-eyebrow {
+            font-size: 0.66rem; text-transform: uppercase; letter-spacing: 3px;
+            color: var(--faint); font-weight: 700; margin-bottom: 0.9rem;
         }
-
-        .activities-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: #d4a574;
-            font-weight: 500;
-            display: block;
-            margin-bottom: 1rem;
+        .vital-hero .vital-eyebrow { color: var(--accent); }
+        .vital-number { display: flex; align-items: baseline; gap: 0.5rem; }
+        .vital-number span { font-size: clamp(3rem, 8vw, 4.6rem); font-weight: 800; letter-spacing: -2px; line-height: 0.9; }
+        .vital-number em { font-style: normal; font-size: 0.82rem; letter-spacing: 0.5px; color: #b9ad9b; }
+        .vital-trend {
+            display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1rem;
+            font-size: 0.82rem; font-weight: 600; letter-spacing: 0.3px;
+            align-self: flex-start; padding: 0.3rem 0.75rem; border-radius: 999px;
+            background: rgba(255,255,255,0.08); color: #d9d1c4;
         }
+        .vital-trend.up { color: #7bbf8f; }
+        .vital-trend.down { color: #d99a8f; }
+        .vital-date { margin-top: 0.9rem; font-size: 0.75rem; color: #8f857a; letter-spacing: 0.5px; }
+        .vital-stat { font-size: clamp(2.2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -1.5px; line-height: 1; color: var(--ink); }
+        .vital-sub { margin-top: 0.6rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--faint); }
 
-        .activities-title {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 700;
-            letter-spacing: -2px;
-            color: #1a1a1a;
+        .chart-card {
+            background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+            padding: 1.7rem 1.8rem 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.04);
         }
+        .chart-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.2rem; }
+        .chart-head h3 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.3px; }
+        .range-toggles { display: flex; gap: 0.5rem; }
+        .range-toggle {
+            padding: 0.4rem 0.9rem; border: 1px solid var(--line); background: none; color: var(--muted);
+            cursor: pointer; transition: all 0.25s ease; text-transform: uppercase;
+            letter-spacing: 1.5px; font-size: 0.66rem; font-weight: 700; border-radius: 999px;
+        }
+        .range-toggle.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+        .range-toggle:hover { border-color: var(--ink); }
+        .vo2-chart-wrap { position: relative; height: 320px; }
+        .card-note { margin-top: 1.2rem; font-size: 0.9rem; color: var(--muted); line-height: 1.65; }
+        .card-note strong { color: var(--ink); font-weight: 600; }
+        .vitals-source { margin-top: 1rem; font-size: 0.72rem; color: var(--faint); letter-spacing: 0.4px; }
 
-        /* Year-to-date summary band */
+        /* ── Recent Activities (Strava) ── */
+        .activities { padding: 6rem 0; border-top: 1px solid var(--line); }
         .ytd {
-            max-width: 1200px;
-            margin: 0 auto 1.5rem;
-            background: #1a1a1a;
-            color: #f2efe9;
-            padding: 3rem 3rem;
+            background: #16130f; color: #f2efe9; padding: 2.6rem 2.6rem; border-radius: 12px; margin: 2.4rem 0 1.2rem;
         }
-
         .ytd-eyebrow {
-            display: block;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: #d4a574;
-            font-weight: 500;
-            margin-bottom: 1.8rem;
+            display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 4px;
+            color: var(--accent); font-weight: 600; margin-bottom: 1.6rem;
         }
-
-        .ytd-stats {
-            display: flex;
-            align-items: center;
-            gap: 3.5rem;
-        }
-
-        .ytd-stat {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
+        .ytd-stats { display: flex; align-items: center; gap: 3.5rem; flex-wrap: wrap; }
+        .ytd-stat { display: flex; flex-direction: column; gap: 0.5rem; }
         .ytd-value {
-            display: flex;
-            align-items: baseline;
-            gap: 0.4rem;
-            font-size: clamp(2.4rem, 6vw, 4.5rem);
-            font-weight: 700;
-            line-height: 1;
-            letter-spacing: -2px;
-            color: #fff;
+            display: flex; align-items: baseline; gap: 0.4rem;
+            font-size: clamp(2.4rem, 6vw, 4rem); font-weight: 700; line-height: 1; letter-spacing: -2px; color: #fff;
         }
+        .ytd-unit { font-size: 1.1rem; font-weight: 600; letter-spacing: 0; color: var(--accent); }
+        .ytd-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 3px; color: #a89f92; }
+        .ytd-divider { align-self: stretch; width: 1px; background: rgba(255, 255, 255, 0.15); }
 
-        .ytd-unit {
-            font-size: 1.1rem;
-            font-weight: 600;
-            letter-spacing: 0;
-            color: #d4a574;
-        }
-
-        .ytd-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: #a89f92;
-        }
-
-        .ytd-divider {
-            align-self: stretch;
-            width: 1px;
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        /* Honest note about the (now manual) feed */
         .activities-note {
-            max-width: 1200px;
-            margin: 0 auto 4rem;
-            background: #fff;
-            border: 1px solid #d8d5d0;
-            border-left: 3px solid #d4a574;
-            padding: 1.4rem 1.7rem;
+            background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--accent);
+            padding: 1.4rem 1.7rem; border-radius: 8px; margin-bottom: 2.4rem;
         }
-
-        .activities-note p {
-            margin: 0;
-            font-size: 0.9rem;
-            line-height: 1.65;
-            color: #6b6b6b;
-        }
-
-        .activities-note strong {
-            color: #1a1a1a;
-            font-weight: 600;
-        }
+        .activities-note p { margin: 0; font-size: 0.9rem; line-height: 1.65; color: var(--muted); }
+        .activities-note strong { color: var(--ink); font-weight: 600; }
 
         .activities-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.5rem;
-            max-width: 1200px;
-            margin: 0 auto;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;
         }
+        .activity-card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+        .activity-map-container { height: 220px; background: #e8e4de; position: relative; }
+        .activity-map-container .leaflet-container { height: 100%; width: 100%; }
 
-        .activity-card {
-            background: #fff;
-            border: 1px solid #d8d5d0;
-            overflow: hidden;
-        }
-
-        .activity-map-container {
-            height: 220px;
-            background: #e8e4de;
-            position: relative;
-        }
-
-        .activity-map-container .leaflet-container {
-            height: 100%;
-            width: 100%;
-        }
-
-        /* Shown when an activity has no public route (e.g. follower-only /
-           start & end hidden). A styled hero instead of an empty box. */
         .activity-hero {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            position: relative;
-            overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100%; position: relative; overflow: hidden;
             background:
                 radial-gradient(circle at 28% 22%, rgba(212,165,116,0.20), transparent 60%),
                 radial-gradient(circle at 82% 82%, rgba(212,165,116,0.12), transparent 55%),
                 #ece8e1;
         }
         .activity-hero::before {
-            content: "";
-            position: absolute;
-            inset: 0;
+            content: ""; position: absolute; inset: 0;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 220'%3E%3Cpath d='M18 176 C 60 120 92 202 140 138 S 224 58 262 120 S 344 182 382 88' fill='none' stroke='%23d4a574' stroke-width='3' stroke-linecap='round' stroke-dasharray='1 11'/%3E%3C/svg%3E");
-            background-size: cover;
-            background-position: center;
-            opacity: 0.55;
+            background-size: cover; background-position: center; opacity: 0.55;
         }
         .activity-hero-distance {
-            position: relative;
-            display: flex;
-            align-items: baseline;
-            gap: 0.35rem;
-            font-size: 3rem;
-            font-weight: 700;
-            line-height: 1;
-            letter-spacing: -1.5px;
-            color: #1a1a1a;
+            position: relative; display: flex; align-items: baseline; gap: 0.35rem;
+            font-size: 3rem; font-weight: 700; line-height: 1; letter-spacing: -1.5px; color: var(--ink);
         }
-        .activity-hero-distance span {
-            font-size: 1rem;
-            font-weight: 600;
-            letter-spacing: 0;
-            color: #d4a574;
-        }
+        .activity-hero-distance span { font-size: 1rem; font-weight: 600; letter-spacing: 0; color: var(--accent); }
         .activity-hero-label {
-            position: relative;
-            margin-top: 0.75rem;
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: #a89f92;
+            position: relative; margin-top: 0.75rem; font-size: 0.6rem;
+            text-transform: uppercase; letter-spacing: 3px; color: #a89f92;
         }
 
-        .activity-info {
-            padding: 1.8rem;
-        }
-
-        .activity-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.8rem;
-        }
-
-        .activity-type-badge {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: #d4a574;
-            font-weight: 600;
-        }
-
-        .activity-date {
-            font-size: 0.75rem;
-            color: #999;
-        }
-
+        .activity-info { padding: 1.8rem; }
+        .activity-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; }
+        .activity-type-badge { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 3px; color: var(--accent); font-weight: 600; }
+        .activity-date { font-size: 0.75rem; color: var(--faint); }
         .activity-name {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #1a1a1a;
-            margin-bottom: 1.4rem;
-            letter-spacing: -0.3px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 1rem; font-weight: 600; color: var(--ink); margin-bottom: 1.4rem; letter-spacing: -0.3px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
-
-        .activity-stats {
-            display: flex;
-            gap: 2rem;
-            border-top: 1px solid #e8e4de;
-            padding-top: 1.2rem;
-        }
-
-        .stat {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .stat-value {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #1a1a1a;
-            letter-spacing: -0.5px;
-            line-height: 1;
-        }
-
-        .stat-label {
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #999;
-            margin-top: 0.35rem;
-        }
-
+        .activity-stats { display: flex; gap: 2rem; border-top: 1px solid #e8e4de; padding-top: 1.2rem; }
+        .stat { display: flex; flex-direction: column; }
+        .stat-value { font-size: 1.25rem; font-weight: 700; color: var(--ink); letter-spacing: -0.5px; line-height: 1; }
+        .stat-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; color: var(--faint); margin-top: 0.35rem; }
         .activities-loading {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 4rem;
-            color: #999;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
+            grid-column: 1 / -1; text-align: center; padding: 4rem; color: var(--faint);
+            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 3px;
         }
 
         /* ── Closing ── */
-        .closing {
-            background: #1a1a1a;
-            padding: 10rem 2rem;
-            text-align: center;
-        }
-
+        .closing { background: #141414; padding: 9rem 2rem; text-align: center; }
         .closing-quote {
-            font-size: clamp(2.5rem, 6vw, 5rem);
-            font-weight: 700;
-            letter-spacing: -2px;
-            line-height: 1.1;
-            color: #faf8f5;
-            margin-bottom: 2rem;
+            font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 700; letter-spacing: -2px;
+            line-height: 1.1; color: #faf8f5; margin-bottom: 2rem;
         }
+        .closing-sub { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 4px; color: var(--accent); font-weight: 500; }
 
-        .closing-sub {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: #d4a574;
-            font-weight: 500;
-        }
-
-        /* ── Back home ── */
-        .back {
-            background: #faf8f5;
-            padding: 4rem 2rem;
-            text-align: center;
-        }
-
-        .back-link {
-            display: inline-block;
-            padding: 1rem 2.5rem;
-            background: #1a1a1a;
-            color: #faf8f5;
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            border: 2px solid #1a1a1a;
-        }
-
-        .back-link:hover {
-            background: transparent;
-            color: #1a1a1a;
+        /* ── Footer ── */
+        footer { border-top: 1px solid var(--line); padding: 3rem 0 4rem; text-align: center; }
+        footer a {
+            color: var(--ink); text-decoration: none; font-size: 0.8rem; letter-spacing: 2px;
+            text-transform: uppercase; border-bottom: 1px solid var(--accent); padding-bottom: 3px;
         }
 
         /* ── Responsive ── */
         @media (max-width: 900px) {
-            .hero {
-                padding: 8rem 2rem 5rem;
-            }
-
-            .hero-scroll {
-                left: 2rem;
-            }
-
-            .sport-card {
-                padding: 4rem 2rem;
-            }
+            .hero { padding: 8rem 2rem 5rem; }
+            .hero-scroll { left: 2rem; }
+            .vitals-grid { grid-template-columns: 1fr 1fr; }
+            .vital-hero { grid-column: 1 / -1; }
         }
-
         @media (max-width: 640px) {
-            .nav {
-                top: 1.2rem;
-                right: 1.2rem;
-                gap: 1rem;
-            }
-
-            .nav-link {
-                font-size: 0.7rem;
-                letter-spacing: 1px;
-                color: #faf8f5;
-            }
-
-            .hero {
-                padding: 5.5rem 1.5rem 4rem;
-                min-height: 90vh;
-            }
-
-            .hero-eyebrow {
-                font-size: 0.65rem;
-                letter-spacing: 2px;
-            }
-
-            .hero-title {
-                letter-spacing: -2px;
-                margin-bottom: 2rem;
-            }
-
-            .hero-sub {
-                font-size: 0.95rem;
-                line-height: 1.7;
-            }
-
-            .hero-scroll {
-                left: 1.5rem;
-                bottom: 2rem;
-            }
-
-            .manifesto {
-                padding: 5rem 1.5rem;
-            }
-
-            .sports {
-                grid-template-columns: 1fr;
-            }
-
-            .sport-card {
-                padding: 3rem 1.5rem;
-            }
-
-            .sport-card:nth-child(2n) {
-                border-left: none;
-                border-top: 1px solid #d8d5d0;
-            }
-
-            .sport-photo {
-                aspect-ratio: 3 / 2;
-                margin-bottom: 2rem;
-            }
-
-            .sport-name {
-                font-size: 2rem;
-            }
-
-            .sport-desc {
-                font-size: 0.95rem;
-                max-width: 100%;
-            }
-
-            .activities {
-                padding: 5rem 1.5rem;
-            }
-
-            .ytd {
-                padding: 2.2rem 1.6rem;
-            }
-
-            .ytd-stats {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1.6rem;
-            }
-
-            .ytd-divider {
-                width: 48px;
-                height: 1px;
-                align-self: flex-start;
-            }
-
-            .activities-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .closing {
-                padding: 6rem 1.5rem;
-            }
-
-            .back {
-                padding: 3rem 1.5rem;
-            }
+            .wrap { padding: 0 1.5rem; }
+            .masthead { top: 1.4rem; left: 1.5rem; }
+            .nav { top: 1.5rem; right: 1.5rem; gap: 1.1rem; }
+            .nav-link { font-size: 0.7rem; letter-spacing: 1px; }
+            .hero { padding: 5.5rem 1.5rem 4rem; min-height: 90vh; }
+            .hero-title { letter-spacing: -2px; }
+            .hero-scroll { left: 1.5rem; bottom: 2rem; }
+            .manifesto { padding: 4.5rem 0; }
+            .sports, .vitals, .activities { padding: 4.5rem 0; }
+            .sports-grid { grid-template-columns: 1fr; }
+            .vitals-grid { grid-template-columns: 1fr; }
+            .vital-hero { grid-column: auto; }
+            .ytd { padding: 2.2rem 1.6rem; }
+            .ytd-stats { flex-direction: column; align-items: flex-start; gap: 1.6rem; }
+            .ytd-divider { width: 48px; height: 1px; align-self: flex-start; }
+            .activities-grid { grid-template-columns: 1fr; }
+            .closing { padding: 6rem 1.5rem; }
         }
     </style>
 </head>
 <body>
 
+    <a href="index.html" class="masthead"><span class="masthead-name">Elisabetta Rappo</span></a>
     <nav class="nav">
-        <a href="index.html" class="nav-link">Home</a>
         <a href="projects.html" class="nav-link">Projects</a>
+        <a href="running.html" class="nav-link current">Sport</a>
         <a href="loft.html" class="nav-link">The Loft</a>
     </nav>
 
     <!-- Hero -->
     <section class="hero">
-        <span class="hero-eyebrow">Sport — Elisabetta Rappo</span>
-        <h1 class="hero-title">MOVE<br>MENT</h1>
-        <p class="hero-sub">Not a routine. Not a goal. A way of being in the world — every single day.</p>
+        <div class="hero-inner">
+            <span class="hero-eyebrow">Sport — Elisabetta Rappo</span>
+            <h1 class="hero-title">MOVE<br>MENT</h1>
+            <p class="hero-sub">Not a routine. Not a goal. A way of being in the world — measured, felt, and repeated every single day.</p>
+        </div>
         <span class="hero-scroll">Scroll to explore</span>
     </section>
 
     <!-- Manifesto -->
     <section class="manifesto">
-        <div class="manifesto-inner">
-            <span class="manifesto-label">The Philosophy</span>
-            <p class="manifesto-text">
-                Movement isn't something I fit into the day — it <strong>is</strong> the day. It clears the mind before the meetings, resets the body after the screen, and reminds me that I am more than what I produce. I run, I climb, I pedal, I breathe with intention. Four disciplines, one belief: the body in motion is the self at its most alive.
-            </p>
+        <div class="wrap">
+            <div class="manifesto-inner">
+                <span class="manifesto-label">The Philosophy</span>
+                <p class="manifesto-text">
+                    Movement isn't something I fit into the day — it <strong>is</strong> the day. It clears the mind before the meetings, resets the body after the screen, and reminds me that I am more than what I produce. I run, I stretch, I pedal, I climb. Four disciplines, one belief: <strong>the body in motion is the self at its most alive</strong> — and what gets measured, gets better.
+                </p>
+            </div>
         </div>
     </section>
 
     <!-- Sports grid -->
     <section class="sports">
+        <div class="wrap">
+            <div class="sec-head">
+                <span class="sec-num">01 — The Disciplines</span>
+                <h2>Four ways I move</h2>
+                <p>Each one asks something different of the body, and gives something different back.</p>
+            </div>
 
-        <div class="sport-card">
-            <img src="running_photo.jpeg" alt="Running through the city" class="sport-photo">
-            <span class="sport-number">01</span>
-            <h2 class="sport-name">Running</h2>
-            <p class="sport-desc">
-                The city is my track. Early mornings through Central Park, long runs along the East River, and the quiet satisfaction of miles logged before the rest of the world wakes up. Running teaches patience — with pace, with progress, with yourself.
-            </p>
-            <span class="sport-tag">Endurance</span>
+            <div class="sports-grid">
+
+                <div class="sport-card">
+                    <div class="sport-photo-wrap">
+                        <img src="running_photo.jpeg" alt="Running through the city" class="sport-photo">
+                    </div>
+                    <div class="sport-body">
+                        <div class="sport-top"><span class="sport-number">01</span><span class="sport-tag">Endurance</span></div>
+                        <h3 class="sport-name">Running</h3>
+                        <p class="sport-desc">The city is my track. Early mornings through the park, long runs along the river, and the quiet satisfaction of miles logged before the world wakes up. Running teaches patience — with pace, with progress, with yourself.</p>
+                    </div>
+                </div>
+
+                <div class="sport-card">
+                    <div class="sport-graphic"><span>Studio</span></div>
+                    <div class="sport-body">
+                        <div class="sport-top"><span class="sport-number">02</span><span class="sport-tag">Presence</span></div>
+                        <h3 class="sport-name">Pilates</h3>
+                        <p class="sport-desc">Slow, deliberate, and deeply effective. Pilates brought me back to my body after years at a desk — teaching me to move from the core, to hold tension without bracing, to be precise. It's strength without ego.</p>
+                    </div>
+                </div>
+
+                <div class="sport-card">
+                    <div class="sport-photo-wrap">
+                        <img src="cycling.jpeg" alt="Cycling in the city" class="sport-photo">
+                    </div>
+                    <div class="sport-body">
+                        <div class="sport-top"><span class="sport-number">03</span><span class="sport-tag">Rhythm</span></div>
+                        <h3 class="sport-name">Cycling</h3>
+                        <p class="sport-desc">Cadence and breath, speed and surrender. Whether on a spin bike or through the streets, cycling gives me rhythm. There's something meditative about pushing through resistance — legs burning, pace constant, mind finally quiet.</p>
+                    </div>
+                </div>
+
+                <div class="sport-card">
+                    <div class="sport-photo-wrap">
+                        <img src="climbing.jpeg" alt="Bouldering at the climbing gym" class="sport-photo">
+                    </div>
+                    <div class="sport-body">
+                        <div class="sport-top"><span class="sport-number">04</span><span class="sport-tag">Focus</span></div>
+                        <h3 class="sport-name">Climbing</h3>
+                        <p class="sport-desc">The wall is a problem to solve. Every route is a conversation between grip strength, body position, and staying calm when you're stuck. Climbing shuts off the noise — there is only the next hold, the next move.</p>
+                    </div>
+                </div>
+
+            </div>
         </div>
+    </section>
 
-        <div class="sport-card">
-            <span class="sport-number">02</span>
-            <h2 class="sport-name">Pilates</h2>
-            <p class="sport-desc">
-                Slow, deliberate, and deeply effective. Pilates brought me back to my body after years of sitting at a desk — teaching me how to move from the core, how to hold tension without bracing, how to be precise. It's strength without ego.
-            </p>
-            <span class="sport-tag">Presence</span>
+    <!-- Daily health lab -->
+    <section class="vitals">
+        <div class="wrap">
+            <div class="sec-head">
+                <span class="sec-num">02 — The Daily Lab</span>
+                <h2>Monitoring my health, one day at a time</h2>
+                <p>Every evening I log my VO₂ max — how efficiently my body turns oxygen into effort, and one of the strongest single predictors of long-term health. It's my body's daily read-out. Here's the trend, updated automatically each night.</p>
+            </div>
+
+            <div class="vitals-grid">
+                <div class="vital-card vital-hero">
+                    <span class="vital-eyebrow">Latest reading</span>
+                    <div class="vital-number"><span id="v-latest">–</span><em>ml/kg/min</em></div>
+                    <div class="vital-trend" id="v-trend">Loading…</div>
+                    <div class="vital-date" id="v-date"></div>
+                </div>
+                <div class="vital-card">
+                    <span class="vital-eyebrow">7-day average</span>
+                    <div class="vital-stat" id="v-avg">–</div>
+                    <div class="vital-sub">Rolling mean</div>
+                </div>
+                <div class="vital-card">
+                    <span class="vital-eyebrow">Personal best</span>
+                    <div class="vital-stat" id="v-best">–</div>
+                    <div class="vital-sub" id="v-best-date">—</div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-head">
+                    <h3>VO₂ max over time</h3>
+                    <div class="range-toggles">
+                        <button class="range-toggle" data-range="30">30d</button>
+                        <button class="range-toggle" data-range="90">90d</button>
+                        <button class="range-toggle active" data-range="all">All</button>
+                    </div>
+                </div>
+                <div class="vo2-chart-wrap"><canvas id="vo2Chart"></canvas></div>
+                <p class="card-note"><strong>Why I track it —</strong> VO₂ max is the ceiling on my aerobic engine. Watching it day to day keeps me honest: it rewards consistency, dips when I'm run-down, and climbs slowly when the training is working. This is personal curiosity, not medical advice — just me, paying attention.</p>
+                <p class="vitals-source" id="v-source">Source: daily log</p>
+            </div>
         </div>
-
-        <div class="sport-card">
-            <img src="cycling.jpeg" alt="Cycling in Central Park" class="sport-photo">
-            <span class="sport-number">03</span>
-            <h2 class="sport-name">Cycling</h2>
-            <p class="sport-desc">
-                Cadence and breath, speed and surrender. Whether on a spin bike or through the streets, cycling gives me rhythm. There's something meditative about pushing through resistance — legs burning, pace constant, mind finally quiet.
-            </p>
-            <span class="sport-tag">Rhythm</span>
-        </div>
-
-        <div class="sport-card">
-            <img src="climbing.jpeg" alt="Bouldering at the climbing gym" class="sport-photo">
-            <span class="sport-number">04</span>
-            <h2 class="sport-name">Climbing</h2>
-            <p class="sport-desc">
-                The wall is a problem to solve. Every route is a conversation between grip strength, body positioning, and the ability to stay calm when you're stuck. Climbing shuts off the noise — there is only the next hold, the next move.
-            </p>
-            <span class="sport-tag">Focus</span>
-        </div>
-
     </section>
 
     <!-- Recent Activities -->
     <section class="activities">
-        <div class="activities-header">
-            <span class="activities-label">2026 · From Strava</span>
-            <h2 class="activities-title">Recent Activity</h2>
-        </div>
-        <div class="ytd">
-            <span class="ytd-eyebrow">This year so far</span>
-            <div class="ytd-stats">
-                <div class="ytd-stat">
-                    <span class="ytd-value">578<span class="ytd-unit">km</span></span>
-                    <span class="ytd-label">Running</span>
-                </div>
-                <div class="ytd-divider"></div>
-                <div class="ytd-stat">
-                    <span class="ytd-value">1,344<span class="ytd-unit">km</span></span>
-                    <span class="ytd-label">Cycling</span>
+        <div class="wrap">
+            <div class="sec-head">
+                <span class="sec-num">03 — From Strava</span>
+                <h2>Recent activity</h2>
+                <p>The proof, mile by mile. My last few sessions, pulled from my training log.</p>
+            </div>
+            <div class="ytd">
+                <span class="ytd-eyebrow">This year so far</span>
+                <div class="ytd-stats">
+                    <div class="ytd-stat">
+                        <span class="ytd-value">578<span class="ytd-unit">km</span></span>
+                        <span class="ytd-label">Running</span>
+                    </div>
+                    <div class="ytd-divider"></div>
+                    <div class="ytd-stat">
+                        <span class="ytd-value">1,344<span class="ytd-unit">km</span></span>
+                        <span class="ytd-label">Cycling</span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="activities-note">
-            <p><strong>A note on the feed —</strong> Since June 30, Strava has kept its API behind a paid subscription, which I don't have. This page can no longer fetch my activities automatically, so I added the two August runs by hand. The feed may go quiet now and then, but the running won't stop.</p>
-        </div>
-        <div class="activities-grid" id="activities-grid">
-            <p class="activities-loading">Loading activities…</p>
+            <div class="activities-note">
+                <p><strong>A note on the feed —</strong> Since June 30, Strava has kept its API behind a paid subscription, which I don't have. This page can no longer fetch my activities automatically, so I add recent runs by hand. The feed may go quiet now and then, but the running won't stop.</p>
+            </div>
+            <div class="activities-grid" id="activities-grid">
+                <p class="activities-loading">Loading activities…</p>
+            </div>
         </div>
     </section>
 
     <!-- Closing -->
     <section class="closing">
         <p class="closing-quote">Move.<br>Every day.</p>
-        <span class="closing-sub">New York City — 2025</span>
+        <span class="closing-sub">New York City — 2026</span>
     </section>
 
-    <!-- Back home -->
-    <div class="back">
-        <a href="index.html" class="back-link">Back to Home</a>
-    </div>
+    <!-- Footer -->
+    <footer>
+        <a href="index.html">Back to Home</a>
+    </footer>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Decode Google-encoded polyline
-        function decodePolyline(encoded) {
-            const points = [];
-            let index = 0, lat = 0, lng = 0;
-            while (index < encoded.length) {
-                let shift = 0, result = 0, b;
-                do { b = encoded.charCodeAt(index++) - 63; result |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
-                lat += (result & 1) ? ~(result >> 1) : (result >> 1);
-                shift = 0; result = 0;
-                do { b = encoded.charCodeAt(index++) - 63; result |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
-                lng += (result & 1) ? ~(result >> 1) : (result >> 1);
-                points.push([lat / 1e5, lng / 1e5]);
+    /* ============================================================
+       CONFIG — VO₂ max data source
+       Paste the "Publish to web → CSV" link for the sheet here.
+       Leave '' to use the local vo2max.json fallback only.
+       Expected columns: a date column + a VO₂ max column
+       (headers containing "date" and "vo2"/"v02" are auto-detected;
+        if there are no headers it assumes col 1 = date, col 2 = value).
+       ============================================================ */
+    const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTYd_H10RifolnA35bhw5Od7vKil9OQsR1TXk2GcYv8sHhHnr7nTtx2F8dtMTDG2jdrtaQpXW5OV7pG/pub?output=csv';
+
+    /* ---------- Nav colour on scroll ---------- */
+    const heroEl = document.querySelector('.hero');
+    function onScroll() {
+        const threshold = heroEl ? heroEl.offsetHeight - 90 : 500;
+        document.body.classList.toggle('scrolled', window.scrollY > threshold);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    /* ==========================================================
+       VO₂ MAX — load, parse, render
+       ========================================================== */
+    const num = (v) => {
+        if (v == null) return NaN;
+        return parseFloat(String(v).replace(',', '.').replace(/[^\d.\-]/g, ''));
+    };
+
+    function parseDate(s) {
+        if (!s) return null;
+        s = String(s).trim();
+        // ISO first (YYYY-MM-DD)
+        let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+        if (m) return new Date(+m[1], +m[2] - 1, +m[3]);
+        // D/M/Y or M/D/Y with / or . or -
+        m = s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})/);
+        if (m) {
+            let a = +m[1], b = +m[2], y = +m[3];
+            if (y < 100) y += 2000;
+            // If first field can't be a month, treat as day/month (European)
+            const day = a > 12 ? a : (b > 12 ? b : a);
+            const mon = a > 12 ? b : (b > 12 ? a : b);
+            return new Date(y, mon - 1, day);
+        }
+        const d = new Date(s);
+        return isNaN(d) ? null : d;
+    }
+
+    // Minimal CSV parser (handles quoted fields with commas)
+    function parseCSV(text) {
+        const rows = [];
+        let row = [], field = '', inQ = false;
+        for (let i = 0; i < text.length; i++) {
+            const c = text[i];
+            if (inQ) {
+                if (c === '"') { if (text[i + 1] === '"') { field += '"'; i++; } else inQ = false; }
+                else field += c;
+            } else {
+                if (c === '"') inQ = true;
+                else if (c === ',') { row.push(field); field = ''; }
+                else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+                else if (c === '\r') { /* skip */ }
+                else field += c;
             }
-            return points;
         }
+        if (field.length || row.length) { row.push(field); rows.push(row); }
+        return rows.filter(r => r.some(c => String(c).trim() !== ''));
+    }
 
-        function formatDate(dateStr) {
-            const d = new Date(dateStr + 'T00:00:00');
-            return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        }
-
-        function getTypeLabel(type) {
-            const map = { Run: 'Running', Ride: 'Cycling', VirtualRide: 'Cycling',
-                          Swim: 'Swimming', Walk: 'Walking', Hike: 'Hiking',
-                          WeightTraining: 'Strength', Yoga: 'Yoga', Workout: 'Workout',
-                          RockClimbing: 'Climbing' };
-            return map[type] || type;
-        }
-
-        function getThirdStat(activity) {
-            if (activity.type === 'Run' && activity.pace && activity.pace !== '-') {
-                return `<div class="stat">
-                    <span class="stat-value">${activity.pace.replace('/km', '')}</span>
-                    <span class="stat-label">/km pace</span>
-                </div>`;
+    function rowsToSeries(rows) {
+        if (!rows.length) return [];
+        // Detect header
+        const header = rows[0].map(h => String(h).toLowerCase().trim());
+        const hasHeader = header.some(h => h.includes('date') || h.includes('vo2') || h.includes('v02'));
+        let dateIdx = 0, valIdx = 1;
+        if (hasHeader) {
+            const di = header.findIndex(h => h.includes('date') || h.includes('day') || h.includes('data'));
+            const vi = header.findIndex(h => h.includes('vo2') || h.includes('v02') || h.includes('vo₂'));
+            if (di !== -1) dateIdx = di;
+            if (vi !== -1) valIdx = vi;
+            // If value column not found by name, pick first numeric non-date column
+            if (vi === -1) {
+                const probe = rows[1] || [];
+                valIdx = probe.findIndex((c, i) => i !== dateIdx && !isNaN(num(c)));
+                if (valIdx === -1) valIdx = dateIdx === 0 ? 1 : 0;
             }
-            if ((activity.type === 'Ride' || activity.type === 'VirtualRide') && activity.moving_time > 0) {
-                const speed = (parseFloat(activity.distance_km) / (activity.moving_time / 3600)).toFixed(1);
-                return `<div class="stat">
-                    <span class="stat-value">${speed}</span>
-                    <span class="stat-label">km/h</span>
-                </div>`;
-            }
-            return '';
         }
+        const body = hasHeader ? rows.slice(1) : rows;
+        const out = [];
+        for (const r of body) {
+            const d = parseDate(r[dateIdx]);
+            const v = num(r[valIdx]);
+            if (d && !isNaN(v)) out.push({ date: d, vo2max: v });
+        }
+        out.sort((a, b) => a.date - b.date);
+        return out;
+    }
 
-        async function fetchActivities() {
-            // Try live API first (works with local dev server)
+    async function loadVO2() {
+        // Live sheet first (if configured), then local fallback
+        if (SHEET_CSV_URL) {
             try {
-                const res = await fetch('/api/strava/activities?per_page=6');
-                if (res.ok) return await res.json();
-            } catch (_) {}
-            // Fall back to pre-built static file (GitHub Pages)
-            const res = await fetch('activities.json');
-            if (!res.ok) throw new Error('No activity data available');
-            return await res.json();
+                const res = await fetch(SHEET_CSV_URL, { cache: 'no-store' });
+                if (res.ok) {
+                    const series = rowsToSeries(parseCSV(await res.text()));
+                    if (series.length) return { series, live: true };
+                }
+            } catch (_) { /* fall through */ }
         }
+        const res = await fetch('vo2max.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('no vo2 data');
+        const json = await res.json();
+        const series = json
+            .map(d => ({ date: parseDate(d.date), vo2max: num(d.vo2max ?? d.vo2 ?? d.value) }))
+            .filter(d => d.date && !isNaN(d.vo2max))
+            .sort((a, b) => a.date - b.date);
+        return { series, live: false };
+    }
 
-        function renderActivities(activities) {
-            const grid = document.getElementById('activities-grid');
+    const fmtDate = (d) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const fmtShort = (d) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
-            if (!activities.length) {
-                grid.innerHTML = '<p class="activities-loading">No recent activities</p>';
-                return;
-            }
+    let vo2Chart = null;
+    let fullSeries = [];
 
-            grid.innerHTML = '';
-            activities.forEach((activity, i) => {
-                    const card = document.createElement('div');
-                    card.className = 'activity-card';
-                    card.innerHTML = `
-                        <div class="activity-map-container" id="map-${i}">
-                            ${!activity.map ? `<div class="activity-hero">
-                                <div class="activity-hero-distance">${activity.distance_km}<span>km</span></div>
-                                <div class="activity-hero-label">Route private</div>
-                            </div>` : ''}
-                        </div>
-                        <div class="activity-info">
-                            <div class="activity-meta">
-                                <span class="activity-type-badge">${getTypeLabel(activity.type)}</span>
-                                <span class="activity-date">${formatDate(activity.date)}</span>
-                            </div>
-                            <div class="activity-name">${activity.name}</div>
-                            <div class="activity-stats">
-                                <div class="stat">
-                                    <span class="stat-value">${activity.distance_km}</span>
-                                    <span class="stat-label">km</span>
-                                </div>
-                                <div class="stat">
-                                    <span class="stat-value">${activity.time}</span>
-                                    <span class="stat-label">time</span>
-                                </div>
-                                ${getThirdStat(activity)}
-                            </div>
-                        </div>`;
-                    grid.appendChild(card);
+    function renderStats(series) {
+        if (!series.length) return;
+        const latest = series[series.length - 1];
+        document.getElementById('v-latest').textContent = latest.vo2max.toFixed(1);
+        document.getElementById('v-date').textContent = 'as of ' + fmtDate(latest.date);
 
-                    if (activity.map) {
-                        const points = decodePolyline(activity.map);
-                        if (points.length > 0) {
-                            const leafletMap = L.map(`map-${i}`, {
-                                zoomControl: false, scrollWheelZoom: false,
-                                dragging: false, attributionControl: false
-                            });
-                            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                                maxZoom: 19
-                            }).addTo(leafletMap);
-                            const route = L.polyline(points, { color: '#d4a574', weight: 3, opacity: 0.9 }).addTo(leafletMap);
-                            leafletMap.fitBounds(route.getBounds(), { padding: [24, 24] });
-                        }
+        // 7-day rolling average (last up-to-7 points)
+        const last7 = series.slice(-7);
+        const avg = last7.reduce((s, d) => s + d.vo2max, 0) / last7.length;
+        document.getElementById('v-avg').textContent = avg.toFixed(1);
+
+        // Personal best
+        const best = series.reduce((a, b) => (b.vo2max > a.vo2max ? b : a));
+        document.getElementById('v-best').textContent = best.vo2max.toFixed(1);
+        document.getElementById('v-best-date').textContent = fmtDate(best.date);
+
+        // Trend vs ~7 entries ago
+        const ref = series[Math.max(0, series.length - 8)];
+        const delta = latest.vo2max - ref.vo2max;
+        const trendEl = document.getElementById('v-trend');
+        const arrow = delta > 0.05 ? '▲' : (delta < -0.05 ? '▼' : '■');
+        const word = delta > 0.05 ? 'up' : (delta < -0.05 ? 'down' : 'steady');
+        trendEl.className = 'vital-trend ' + (delta > 0.05 ? 'up' : (delta < -0.05 ? 'down' : ''));
+        trendEl.textContent = `${arrow} ${Math.abs(delta).toFixed(1)} over the last week`;
+        if (Math.abs(delta) <= 0.05) trendEl.textContent = '■ Holding steady this week';
+    }
+
+    function drawChart(series) {
+        const ctx = document.getElementById('vo2Chart').getContext('2d');
+        const labels = series.map(d => fmtShort(d.date));
+        const data = series.map(d => d.vo2max);
+
+        const grad = ctx.createLinearGradient(0, 0, 0, 320);
+        grad.addColorStop(0, 'rgba(212,165,116,0.30)');
+        grad.addColorStop(1, 'rgba(212,165,116,0.00)');
+
+        const cfg = {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [{
+                    label: 'VO₂ max',
+                    data,
+                    borderColor: '#c98f4e',
+                    backgroundColor: grad,
+                    borderWidth: 2.5,
+                    fill: true,
+                    tension: 0.35,
+                    pointRadius: series.length > 45 ? 0 : 3,
+                    pointHoverRadius: 5,
+                    pointBackgroundColor: '#c98f4e',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 1.5,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#16130f', padding: 10, cornerRadius: 8,
+                        titleColor: '#d4a574', bodyColor: '#f3ede4',
+                        callbacks: { label: (c) => ` ${c.parsed.y.toFixed(1)} ml/kg/min` }
                     }
-                });
-        }
-
-        async function loadActivities() {
-            const grid = document.getElementById('activities-grid');
-            try {
-                const activities = await fetchActivities();
-                renderActivities(activities);
-            } catch (err) {
-                grid.innerHTML = '<p class="activities-loading">Could not load activities</p>';
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#999', maxRotation: 0, autoSkip: true, maxTicksLimit: 8, font: { size: 11 } }
+                    },
+                    y: {
+                        grid: { color: 'rgba(0,0,0,0.05)' },
+                        ticks: { color: '#999', font: { size: 11 }, padding: 6 },
+                        title: { display: true, text: 'ml/kg/min', color: '#b0a898', font: { size: 10 } }
+                    }
+                }
             }
-        }
+        };
+        if (vo2Chart) vo2Chart.destroy();
+        vo2Chart = new Chart(ctx, cfg);
+    }
 
-        loadActivities();
+    function applyRange(range) {
+        let series = fullSeries;
+        if (range !== 'all') {
+            const days = parseInt(range, 10);
+            const cutoff = new Date();
+            cutoff.setDate(cutoff.getDate() - days);
+            const filtered = fullSeries.filter(d => d.date >= cutoff);
+            series = filtered.length ? filtered : fullSeries.slice(-days);
+        }
+        drawChart(series);
+    }
+
+    async function initVO2() {
+        try {
+            const { series, live } = await loadVO2();
+            if (!series.length) throw new Error('empty');
+            fullSeries = series;
+            renderStats(series);
+            applyRange('all');
+            const srcEl = document.getElementById('v-source');
+            if (srcEl) srcEl.textContent = live
+                ? 'Source: live daily log · updated automatically each night'
+                : 'Source: daily log';
+
+            document.querySelectorAll('.range-toggle').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.range-toggle').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    applyRange(btn.dataset.range);
+                });
+            });
+        } catch (err) {
+            const trendEl = document.getElementById('v-trend');
+            if (trendEl) trendEl.textContent = 'Data unavailable';
+        }
+    }
+    initVO2();
+
+    /* ==========================================================
+       STRAVA activities (unchanged behaviour)
+       ========================================================== */
+    function decodePolyline(encoded) {
+        const points = [];
+        let index = 0, lat = 0, lng = 0;
+        while (index < encoded.length) {
+            let shift = 0, result = 0, b;
+            do { b = encoded.charCodeAt(index++) - 63; result |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
+            lat += (result & 1) ? ~(result >> 1) : (result >> 1);
+            shift = 0; result = 0;
+            do { b = encoded.charCodeAt(index++) - 63; result |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
+            lng += (result & 1) ? ~(result >> 1) : (result >> 1);
+            points.push([lat / 1e5, lng / 1e5]);
+        }
+        return points;
+    }
+
+    function formatDate(dateStr) {
+        const d = new Date(dateStr + 'T00:00:00');
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function getTypeLabel(type) {
+        const map = { Run: 'Running', Ride: 'Cycling', VirtualRide: 'Cycling',
+                      Swim: 'Swimming', Walk: 'Walking', Hike: 'Hiking',
+                      WeightTraining: 'Strength', Yoga: 'Yoga', Workout: 'Workout',
+                      RockClimbing: 'Climbing' };
+        return map[type] || type;
+    }
+
+    function getThirdStat(activity) {
+        if (activity.type === 'Run' && activity.pace && activity.pace !== '-') {
+            return `<div class="stat">
+                <span class="stat-value">${activity.pace.replace('/km', '')}</span>
+                <span class="stat-label">/km pace</span>
+            </div>`;
+        }
+        if ((activity.type === 'Ride' || activity.type === 'VirtualRide') && activity.moving_time > 0) {
+            const speed = (parseFloat(activity.distance_km) / (activity.moving_time / 3600)).toFixed(1);
+            return `<div class="stat">
+                <span class="stat-value">${speed}</span>
+                <span class="stat-label">km/h</span>
+            </div>`;
+        }
+        return '';
+    }
+
+    async function fetchActivities() {
+        try {
+            const res = await fetch('/api/strava/activities?per_page=6');
+            if (res.ok) return await res.json();
+        } catch (_) {}
+        const res = await fetch('activities.json');
+        if (!res.ok) throw new Error('No activity data available');
+        return await res.json();
+    }
+
+    function renderActivities(activities) {
+        const grid = document.getElementById('activities-grid');
+        if (!activities.length) {
+            grid.innerHTML = '<p class="activities-loading">No recent activities</p>';
+            return;
+        }
+        grid.innerHTML = '';
+        activities.forEach((activity, i) => {
+            const card = document.createElement('div');
+            card.className = 'activity-card';
+            card.innerHTML = `
+                <div class="activity-map-container" id="map-${i}">
+                    ${!activity.map ? `<div class="activity-hero">
+                        <div class="activity-hero-distance">${activity.distance_km}<span>km</span></div>
+                        <div class="activity-hero-label">Route private</div>
+                    </div>` : ''}
+                </div>
+                <div class="activity-info">
+                    <div class="activity-meta">
+                        <span class="activity-type-badge">${getTypeLabel(activity.type)}</span>
+                        <span class="activity-date">${formatDate(activity.date)}</span>
+                    </div>
+                    <div class="activity-name">${activity.name}</div>
+                    <div class="activity-stats">
+                        <div class="stat">
+                            <span class="stat-value">${activity.distance_km}</span>
+                            <span class="stat-label">km</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">${activity.time}</span>
+                            <span class="stat-label">time</span>
+                        </div>
+                        ${getThirdStat(activity)}
+                    </div>
+                </div>`;
+            grid.appendChild(card);
+
+            if (activity.map) {
+                const points = decodePolyline(activity.map);
+                if (points.length > 0) {
+                    const leafletMap = L.map(`map-${i}`, {
+                        zoomControl: false, scrollWheelZoom: false,
+                        dragging: false, attributionControl: false
+                    });
+                    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                        maxZoom: 19
+                    }).addTo(leafletMap);
+                    const route = L.polyline(points, { color: '#d4a574', weight: 3, opacity: 0.9 }).addTo(leafletMap);
+                    leafletMap.fitBounds(route.getBounds(), { padding: [24, 24] });
+                }
+            }
+        });
+    }
+
+    async function loadActivities() {
+        const grid = document.getElementById('activities-grid');
+        try {
+            const activities = await fetchActivities();
+            renderActivities(activities);
+        } catch (err) {
+            grid.innerHTML = '<p class="activities-loading">Could not load activities</p>';
+        }
+    }
+    loadActivities();
     </script>
 </body>
 </html>

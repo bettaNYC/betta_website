@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books — Elisabetta Rappo</title>
+    <meta name="description" content="What I'm reading now and everything I've finished — synced from my Goodreads shelves.">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #faf8f5;
+            --ink: #1a1a1a;
+            --muted: #666;
+            --faint: #999;
+            --line: #e0ddd8;
+            --accent: #d4a574;
+            --card: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--ink);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Masthead + nav (matches home / projects) */
+        .masthead { position: fixed; top: 1.85rem; left: 2rem; z-index: 100; line-height: 1; text-decoration: none; }
+        .masthead-name {
+            font-size: 0.85rem; font-weight: 700; letter-spacing: 3px;
+            text-transform: uppercase; color: var(--ink); text-decoration: none; display: block;
+        }
+        .nav { position: fixed; top: 2rem; right: 2rem; z-index: 100; display: flex; gap: 2rem; }
+        .nav-link {
+            text-decoration: none; color: var(--ink); font-size: 0.85rem;
+            text-transform: uppercase; letter-spacing: 2px; font-weight: 500;
+            position: relative; transition: color 0.3s ease;
+        }
+        .nav-link::after {
+            content: ''; position: absolute; width: 100%; height: 1px; background: var(--ink);
+            bottom: -5px; left: 0; transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease;
+        }
+        .nav-link:hover::after { transform: scaleX(1); }
+        .nav-link.current::after { transform: scaleX(1); background: var(--accent); }
+
+        /* Layout */
+        .wrap { max-width: 1000px; margin: 0 auto; padding: 0 2rem; }
+        .page { opacity: 0; animation: fadeIn 0.9s ease-out 0.1s forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(16px);} to { opacity: 1; transform: translateY(0);} }
+
+        /* Hero header */
+        .hero { padding: 9rem 0 2.5rem; max-width: 680px; }
+        .eyebrow { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 3px; color: var(--faint); font-weight: 600; }
+        .hero h1 {
+            font-size: clamp(2.4rem, 6vw, 3.6rem); font-weight: 700; letter-spacing: -1.5px;
+            line-height: 1.02; margin: 0.6rem 0 1.1rem;
+        }
+        .hero p { font-size: 1.05rem; color: var(--muted); max-width: 560px; }
+
+        /* CTA button (site idiom: dark pill, inverts on hover) */
+        .cta {
+            display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 2rem;
+            background: var(--ink); color: #faf8f5; text-decoration: none;
+            padding: 0.9rem 1.9rem; border-radius: 999px;
+            font-size: 0.76rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+            border: 1.5px solid var(--ink); transition: all 0.25s ease;
+        }
+        .cta:hover { background: transparent; color: var(--ink); }
+
+        /* Shelves */
+        .shelf { padding: 3.5rem 0; border-top: 1px solid var(--line); }
+        .shelf-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 2rem; }
+        .shelf-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 3px; color: var(--accent); font-weight: 700; }
+        .shelf-head h2 { font-size: clamp(1.5rem, 3.5vw, 2rem); font-weight: 700; letter-spacing: -0.6px; }
+        .shelf-count { font-size: 0.8rem; color: var(--faint); letter-spacing: 0.5px; }
+
+        /* Currently-reading featured cards */
+        .now-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.4rem; }
+        .now-card {
+            display: flex; gap: 1.3rem; background: var(--card); border: 1px solid var(--line);
+            border-radius: 12px; padding: 1.4rem; text-decoration: none; color: inherit;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04); transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .now-card:hover { transform: translateY(-3px); box-shadow: 0 16px 34px rgba(0,0,0,0.08); }
+        .now-card img {
+            width: 92px; min-width: 92px; height: 138px; object-fit: cover; border-radius: 3px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.22); background: #ece8e1;
+        }
+        .now-card .meta { display: flex; flex-direction: column; justify-content: center; }
+        .now-tag { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); font-weight: 700; margin-bottom: 0.5rem; }
+        .now-card h3 { font-size: 1.08rem; font-weight: 700; letter-spacing: -0.3px; line-height: 1.25; }
+        .now-card .author { font-size: 0.9rem; color: var(--muted); margin-top: 0.3rem; }
+
+        /* Read grid — cover tiles */
+        .read-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1.6rem 1.3rem; }
+        .book { text-decoration: none; color: inherit; display: flex; flex-direction: column; }
+        .book-cover {
+            position: relative; width: 100%; aspect-ratio: 2 / 3; border-radius: 3px; overflow: hidden;
+            background: #ece8e1; box-shadow: 0 8px 20px rgba(0,0,0,0.16); transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .book:hover .book-cover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(0,0,0,0.24); }
+        .book-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .book h3 { font-size: 0.86rem; font-weight: 600; letter-spacing: -0.2px; line-height: 1.3; margin-top: 0.7rem; }
+        .book .author { font-size: 0.78rem; color: var(--faint); margin-top: 0.15rem; }
+        .stars { margin-top: 0.35rem; font-size: 0.72rem; color: var(--accent); letter-spacing: 1px; }
+
+        .shelf-msg { color: var(--faint); font-size: 0.9rem; }
+
+        /* Footer */
+        footer { border-top: 1px solid var(--line); padding: 3rem 0 4rem; text-align: center; }
+        footer a {
+            color: var(--ink); text-decoration: none; font-size: 0.8rem; letter-spacing: 2px;
+            text-transform: uppercase; border-bottom: 1px solid var(--accent); padding-bottom: 3px;
+        }
+
+        @media (max-width: 600px) {
+            .masthead { top: 1.5rem; left: 1.5rem; }
+            .nav { top: 1.5rem; right: 1.5rem; gap: 1.2rem; }
+            .nav-link { font-size: 0.72rem; letter-spacing: 1.5px; }
+            .hero { padding: 8rem 0 2rem; }
+            .now-grid { grid-template-columns: 1fr; }
+            .read-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.3rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="masthead"><span class="masthead-name">Elisabetta Rappo</span></a>
+    <nav class="nav">
+        <a href="projects.html" class="nav-link">Projects</a>
+        <a href="running.html" class="nav-link">Sport</a>
+        <a href="loft.html" class="nav-link">The Loft</a>
+        <a href="books.html" class="nav-link current">Books</a>
+    </nav>
+
+    <div class="page">
+        <div class="wrap">
+            <header class="hero">
+                <span class="eyebrow">On the Shelf</span>
+                <h1>Books</h1>
+                <p>What I'm reading now and everything I've finished — synced straight from my Goodreads shelves.</p>
+                <a class="cta" href="https://www.goodreads.com/user/show/194591694-elisabetta-rappo" target="_blank" rel="noopener noreferrer">View my Goodreads &#8599;</a>
+            </header>
+
+            <section class="shelf">
+                <div class="shelf-head">
+                    <div>
+                        <span class="shelf-label">Right now</span>
+                        <h2>Currently reading</h2>
+                    </div>
+                </div>
+                <div class="now-grid" id="now-grid"><p class="shelf-msg">Loading…</p></div>
+            </section>
+
+            <section class="shelf">
+                <div class="shelf-head">
+                    <div>
+                        <span class="shelf-label">The stack</span>
+                        <h2>Read</h2>
+                    </div>
+                    <span class="shelf-count" id="read-count"></span>
+                </div>
+                <div class="read-grid" id="read-grid"><p class="shelf-msg">Loading…</p></div>
+            </section>
+        </div>
+
+        <footer>
+            <a href="index.html">← Back home</a>
+        </footer>
+    </div>
+
+    <script>
+    const esc = (s) => String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+    function stars(r) {
+        const n = parseInt(r, 10);
+        if (!n || n < 1) return '';
+        return `<div class="stars">${'★'.repeat(n)}${'☆'.repeat(5 - n)}</div>`;
+    }
+
+    function renderNow(books) {
+        const el = document.getElementById('now-grid');
+        if (!books || !books.length) { el.innerHTML = '<p class="shelf-msg">Between books at the moment.</p>'; return; }
+        el.innerHTML = books.map(b => `
+            <a class="now-card" href="${esc(b.link)}" target="_blank" rel="noopener noreferrer">
+                <img src="${esc(b.image)}" alt="${esc(b.title)} cover" loading="lazy">
+                <div class="meta">
+                    <span class="now-tag">Currently reading</span>
+                    <h3>${esc(b.title)}</h3>
+                    <span class="author">${esc(b.author)}</span>
+                </div>
+            </a>`).join('');
+    }
+
+    function renderRead(books) {
+        const el = document.getElementById('read-grid');
+        const count = document.getElementById('read-count');
+        if (!books || !books.length) { el.innerHTML = '<p class="shelf-msg">Nothing finished yet.</p>'; return; }
+        count.textContent = `${books.length} books`;
+        el.innerHTML = books.map(b => `
+            <a class="book" href="${esc(b.link)}" target="_blank" rel="noopener noreferrer">
+                <div class="book-cover"><img src="${esc(b.image)}" alt="${esc(b.title)} cover" loading="lazy"></div>
+                <h3>${esc(b.title)}</h3>
+                <span class="author">${esc(b.author)}</span>
+                ${stars(b.user_rating)}
+            </a>`).join('');
+    }
+
+    (async function () {
+        try {
+            const res = await fetch('books.json', { cache: 'no-store' });
+            if (!res.ok) throw new Error('no books.json');
+            const data = await res.json();
+            renderNow(data['currently-reading'] || []);
+            renderRead(data['read'] || []);
+        } catch (err) {
+            document.getElementById('now-grid').innerHTML = '<p class="shelf-msg">Couldn\'t load the shelves right now — <a href="https://www.goodreads.com/user/show/194591694-elisabetta-rappo" target="_blank" rel="noopener noreferrer">see them on Goodreads</a>.</p>';
+            document.getElementById('read-grid').innerHTML = '';
+        }
+    })();
+    </script>
+
+</body>
+</html>

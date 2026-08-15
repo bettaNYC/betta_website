@@ -253,10 +253,12 @@
         }
         @media (max-width: 620px) {
             .wrap { padding: 0 1.4rem; }
-            .masthead { top: 1.4rem; left: 1.4rem; }
-            .nav { top: 1.5rem; right: 1.4rem; gap: 1rem; }
-            .nav-link { font-size: 0.68rem; letter-spacing: 1px; }
-            .hero { padding: 6rem 0 4rem; }
+            /* Stack the fixed header (centered) so name and nav don't overlap on the hero */
+            .masthead { top: 1.3rem; left: 0; right: 0; text-align: center; }
+            .masthead-name { text-align: center; letter-spacing: 2.5px; }
+            .nav { top: 3.3rem; left: 0; right: 0; justify-content: center; flex-wrap: wrap; gap: 1.2rem; }
+            .nav-link { font-size: 0.72rem; letter-spacing: 1px; }
+            .hero { padding: 7rem 0 4rem; }
             .hero-stats { gap: 1.8rem; }
             section.block { padding: 4rem 0; }
             .vitals-grid { grid-template-columns: 1fr; }

@@ -220,15 +220,33 @@
 
         /* Responsive */
         @media (max-width: 600px) {
+            /* Stack the header: name on top, nav row beneath — no more overlap */
             .masthead {
-                top: 1.5rem;
-                left: 1.5rem;
+                position: static;
+                top: auto;
+                left: auto;
+                text-align: center;
+                padding: 1.6rem 1rem 0;
+            }
+
+            .masthead-name {
+                text-align: center;
+                letter-spacing: 2.5px;
             }
 
             .nav {
-                top: 1.5rem;
-                right: 1.5rem;
-                gap: 1.4rem;
+                position: static;
+                top: auto;
+                right: auto;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 1.1rem;
+                padding: 0.9rem 1rem 0;
+            }
+
+            .main {
+                min-height: auto;
+                padding: 3rem 1.5rem 3.5rem;
             }
 
             .editorial {
@@ -256,7 +274,12 @@
 
         @media (max-width: 380px) {
             .nav {
-                gap: 1rem;
+                gap: 0.9rem;
+            }
+
+            .nav-link {
+                font-size: 0.8rem;
+                letter-spacing: 1.5px;
             }
 
             .headline {

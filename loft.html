@@ -300,9 +300,18 @@
         /* Responsive */
         @media (max-width: 768px) {
             .nav {
-                top: 1.5rem;
+                top: 1.3rem;
+                left: 1.5rem;
                 right: 1.5rem;
-                gap: 1.5rem;
+                flex-direction: row;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 1.1rem;
+            }
+
+            .nav-link {
+                font-size: 0.78rem;
+                letter-spacing: 1px;
             }
 
             .hero-section {

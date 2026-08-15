@@ -117,10 +117,12 @@
         }
 
         @media (max-width: 600px) {
-            .masthead { top: 1.5rem; left: 1.5rem; }
-            .nav { top: 1.5rem; right: 1.5rem; gap: 1.2rem; }
+            /* Stack the header so name and nav don't overlap */
+            .masthead { position: static; top: auto; left: auto; text-align: center; padding: 1.6rem 1rem 0; }
+            .masthead-name { text-align: center; letter-spacing: 2.5px; }
+            .nav { position: static; top: auto; right: auto; justify-content: center; flex-wrap: wrap; gap: 1.1rem; padding: 0.9rem 1rem 0; }
             .nav-link { font-size: 0.72rem; letter-spacing: 1.5px; }
-            .hero { padding: 8rem 0 2rem; }
+            .hero { padding: 2.5rem 0 2rem; }
             .now-grid { grid-template-columns: 1fr; }
             .read-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.3rem 1rem; }
         }

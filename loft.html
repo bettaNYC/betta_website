@@ -155,21 +155,23 @@
         .diptych {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0;
+            gap: 12px;
             width: 100%;
         }
 
         .diptych-item {
             position: relative;
             width: 100%;
-            height: 500px;
+            aspect-ratio: 4 / 3;
             overflow: hidden;
         }
 
-        .diptych-item img {
+        .diptych-item img,
+        .diptych-item video {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center;
             display: block;
         }
 
@@ -226,6 +228,137 @@
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 1px;
+        }
+
+        /* Section heading (within gallery) */
+        .section-heading {
+            text-align: center;
+            max-width: 1400px;
+            margin: 0 auto 2.5rem;
+        }
+
+        .section-heading h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            color: #1a1a1a;
+            font-family: Georgia, serif;
+            margin: 0 0 0.75rem;
+        }
+
+        .section-heading p {
+            font-size: clamp(1rem, 1.5vw, 1.15rem);
+            line-height: 1.7;
+            color: #666;
+            max-width: 620px;
+            margin: 0 auto;
+        }
+
+        /* Before/After caption variant */
+        .diptych-caption .stage {
+            display: block;
+            font-size: 0.72rem;
+            letter-spacing: 2px;
+            color: #999;
+            margin-bottom: 0.15rem;
+        }
+
+        /* AutoCAD / Kitchen Drawings Section */
+        .autocad-section {
+            padding: 6rem 2rem;
+            background: #ffffff;
+        }
+
+        .autocad-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .autocad-drawings {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .autocad-figure {
+            margin: 0;
+            border: 1px solid #e4e2de;
+            padding: 1.5rem;
+            background: #ffffff;
+        }
+
+        .autocad-figure img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .autocad-figure figcaption {
+            margin-top: 1.25rem;
+            text-align: center;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #999999;
+        }
+
+        .kitchen-reality {
+            margin-top: 5rem;
+        }
+
+        .kitchen-reality .gallery-grid {
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .kitchen-single {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+        }
+
+        .kitchen-single img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
+
+        /* Coffee Table Section */
+        .coffee-section {
+            padding: 6rem 2rem;
+        }
+
+        .coffee-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .coffee-text h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            color: #1a1a1a;
+            font-family: Georgia, serif;
+            margin: 0 0 1.5rem;
+        }
+
+        .coffee-text p {
+            font-size: clamp(1rem, 1.5vw, 1.15rem);
+            line-height: 1.8;
+            color: #555555;
+            margin-bottom: 1.25rem;
+        }
+
+        .coffee-image img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
         /* Design Notes Section */
@@ -337,14 +470,28 @@
 
             .diptych {
                 grid-template-columns: 1fr;
-            }
-
-            .diptych-item {
-                height: 400px;
+                gap: 10px;
             }
 
             .single-image {
                 height: 400px;
+            }
+
+            .autocad-section {
+                padding: 4rem 1.5rem;
+            }
+
+            .autocad-figure {
+                padding: 1rem;
+            }
+
+            .coffee-section {
+                padding: 4rem 1.5rem;
+            }
+
+            .coffee-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
             }
 
             .design-notes-container {
@@ -384,6 +531,51 @@
         </div>
     </section>
 
+    <!-- Before & After -->
+    <section class="gallery-section">
+        <div class="section-heading">
+            <h2>Before &amp; After</h2>
+            <p>Some of the spaces we reimagined — the studio, the library, and the bedroom — shown as we found them and as they are today.</p>
+        </div>
+        <div class="gallery-grid">
+            <!-- Studio before / after -->
+            <div class="diptych">
+                <div class="diptych-item">
+                    <img src="loft_studiobefore.jpeg" alt="Studio before renovation">
+                    <div class="diptych-caption"><span class="stage">Before</span>Studio</div>
+                </div>
+                <div class="diptych-item">
+                    <img src="loft_studioafter.jpeg" alt="Studio after renovation">
+                    <div class="diptych-caption"><span class="stage">After</span>Studio</div>
+                </div>
+            </div>
+
+            <!-- Library before / after -->
+            <div class="diptych">
+                <div class="diptych-item">
+                    <img src="loft_librarybefore.jpeg" alt="Library before renovation">
+                    <div class="diptych-caption"><span class="stage">Before</span>Library</div>
+                </div>
+                <div class="diptych-item">
+                    <img src="loft_libraryafter.jpeg" alt="Library after renovation">
+                    <div class="diptych-caption"><span class="stage">After</span>Library</div>
+                </div>
+            </div>
+
+            <!-- Bedroom before / after -->
+            <div class="diptych">
+                <div class="diptych-item">
+                    <img src="loft_bedroombefore.jpeg" alt="Bedroom before renovation">
+                    <div class="diptych-caption"><span class="stage">Before</span>Bedroom</div>
+                </div>
+                <div class="diptych-item">
+                    <img src="loft_bedroomafter.jpeg" alt="Bedroom after renovation">
+                    <div class="diptych-caption"><span class="stage">After</span>Bedroom</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Photo Gallery / Timeline -->
     <section class="gallery-section">
         <div class="gallery-grid">
@@ -408,6 +600,64 @@
             <!-- Full image: Food -->
             <div class="full-image">
                 <img src="food.jpeg" alt="Food">
+            </div>
+        </div>
+    </section>
+
+    <!-- Kitchen Drawings (AutoCAD) Section -->
+    <section class="autocad-section">
+        <div class="autocad-container">
+            <div class="section-heading">
+                <h2>Drawing the Kitchen</h2>
+                <p>I designed and drafted the kitchen myself in AutoCAD — planning every cabinet, appliance, and dimension before a single piece was built.</p>
+            </div>
+            <div class="autocad-drawings">
+                <figure class="autocad-figure">
+                    <img src="loft_autocad1.png" alt="AutoCAD kitchen elevation drawing with dimensions">
+                    <figcaption>Kitchen elevation — AutoCAD</figcaption>
+                </figure>
+                <figure class="autocad-figure">
+                    <img src="loft_autocad2.png" alt="AutoCAD broom closet and pantry drawing with dimensions">
+                    <figcaption>Broom closet &amp; pantry — AutoCAD</figcaption>
+                </figure>
+            </div>
+
+            <!-- From plan to reality: before video + built photos -->
+            <div class="kitchen-reality">
+                <div class="section-heading">
+                    <h2>From Plan to Reality</h2>
+                    <p>The corner as we first found it — and the kitchen and storage columns we built straight from the drawings.</p>
+                </div>
+                <div class="gallery-grid">
+                    <div class="diptych">
+                        <div class="diptych-item">
+                            <video src="loft_kitchenbefore.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                            <div class="diptych-caption"><span class="stage">Before</span>Kitchen</div>
+                        </div>
+                        <div class="diptych-item">
+                            <img src="loft_kitchen.jpeg" alt="Finished kitchen with black cabinetry and marble counter">
+                            <div class="diptych-caption"><span class="stage">After</span>Kitchen</div>
+                        </div>
+                    </div>
+                    <div class="kitchen-single">
+                        <img src="loft_kitchencolumns.png" alt="Built pantry and broom-closet columns">
+                        <div class="diptych-caption"><span class="stage">After</span>Pantry &amp; broom columns</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Coffee Table Section -->
+    <section class="coffee-section">
+        <div class="coffee-grid">
+            <div class="coffee-text">
+                <h2>The Coffee Table</h2>
+                <p>Beyond the space itself, I designed our coffee table from scratch — a solid block of patchwork pine, its top opening to reveal hidden storage for books and everyday things.</p>
+                <p>I took the design from sketch to reality, having it custom-built and produced to fit the room exactly. It's become the quiet centerpiece of the living area.</p>
+            </div>
+            <div class="coffee-image">
+                <img src="loft_customcoffetable.jpeg" alt="Custom-designed patchwork pine coffee table">
             </div>
         </div>
     </section>

@@ -432,6 +432,7 @@
 
         /* Clickable images */
         .diptych-item img,
+        .diptych-item video,
         .single-image img,
         .full-image img,
         .autocad-figure img,
@@ -461,12 +462,18 @@
             visibility: visible;
         }
 
-        .lightbox img {
+        .lightbox img,
+        .lightbox video {
             max-width: 94vw;
             max-height: 94vh;
             object-fit: contain;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
             background: #fff;
+        }
+
+        .lightbox img[src=""],
+        .lightbox video[src=""] {
+            display: none;
         }
 
         .lightbox-close {
@@ -746,24 +753,38 @@
     </section>
 
     <!-- Lightbox overlay -->
-    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged image">
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged media">
         <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
         <img src="" alt="" id="lightboxImg">
+        <video src="" id="lightboxVideo" muted loop playsinline controls></video>
     </div>
 
     <script>
-        // Lightbox: click any photo to open it full-size
+        // Lightbox: click any photo (or the kitchen video) to open it full-size
         (function () {
             const lightbox = document.getElementById('lightbox');
             const lightboxImg = document.getElementById('lightboxImg');
+            const lightboxVideo = document.getElementById('lightboxVideo');
             const closeBtn = document.getElementById('lightboxClose');
-            const zoomable = document.querySelectorAll(
+            const zoomableImgs = document.querySelectorAll(
                 '.diptych-item img, .single-image img, .full-image img, .autocad-figure img, .coffee-image img, .kitchen-single img'
             );
+            const zoomableVideos = document.querySelectorAll('.diptych-item video');
 
-            function open(src, alt) {
+            function openImage(src, alt) {
+                lightboxVideo.pause();
+                lightboxVideo.removeAttribute('src');
                 lightboxImg.src = src;
                 lightboxImg.alt = alt || '';
+                lightbox.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function openVideo(src) {
+                lightboxImg.src = '';
+                lightboxVideo.src = src;
+                lightboxVideo.currentTime = 0;
+                lightboxVideo.play();
                 lightbox.classList.add('open');
                 document.body.style.overflow = 'hidden';
             }
@@ -772,17 +793,25 @@
                 lightbox.classList.remove('open');
                 document.body.style.overflow = '';
                 lightboxImg.src = '';
+                lightboxVideo.pause();
+                lightboxVideo.removeAttribute('src');
             }
 
-            zoomable.forEach(function (img) {
+            zoomableImgs.forEach(function (img) {
                 img.addEventListener('click', function () {
-                    open(img.currentSrc || img.src, img.alt);
+                    openImage(img.currentSrc || img.src, img.alt);
+                });
+            });
+
+            zoomableVideos.forEach(function (video) {
+                video.addEventListener('click', function () {
+                    openVideo(video.currentSrc || video.src);
                 });
             });
 
             closeBtn.addEventListener('click', close);
             lightbox.addEventListener('click', function (e) {
-                if (e.target !== closeBtn) close();
+                if (e.target === lightbox) close();
             });
             document.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape' && lightbox.classList.contains('open')) close();

@@ -430,6 +430,65 @@
             font-weight: 500;
         }
 
+        /* Clickable images */
+        .diptych-item img,
+        .single-image img,
+        .full-image img,
+        .autocad-figure img,
+        .coffee-image img,
+        .kitchen-single img {
+            cursor: zoom-in;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(20, 20, 20, 0.92);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3vmin;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+            cursor: zoom-out;
+        }
+
+        .lightbox.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox img {
+            max-width: 94vw;
+            max-height: 94vh;
+            object-fit: contain;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            background: #fff;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.6rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            border: none;
+            background: transparent;
+            color: #fff;
+            font-size: 2rem;
+            line-height: 1;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+        }
+
+        .lightbox-close:hover {
+            opacity: 1;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .nav {
@@ -689,6 +748,51 @@
         <p class="quote-text">Design isn't just what we see — it's what we live in.</p>
         <p class="quote-location">Greenpoint, Brooklyn — 2025</p>
     </section>
+
+    <!-- Lightbox overlay -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged image">
+        <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+        <img src="" alt="" id="lightboxImg">
+    </div>
+
+    <script>
+        // Lightbox: click any photo to open it full-size
+        (function () {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImg');
+            const closeBtn = document.getElementById('lightboxClose');
+            const zoomable = document.querySelectorAll(
+                '.diptych-item img, .single-image img, .full-image img, .autocad-figure img, .coffee-image img, .kitchen-single img'
+            );
+
+            function open(src, alt) {
+                lightboxImg.src = src;
+                lightboxImg.alt = alt || '';
+                lightbox.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function close() {
+                lightbox.classList.remove('open');
+                document.body.style.overflow = '';
+                lightboxImg.src = '';
+            }
+
+            zoomable.forEach(function (img) {
+                img.addEventListener('click', function () {
+                    open(img.currentSrc || img.src, img.alt);
+                });
+            });
+
+            closeBtn.addEventListener('click', close);
+            lightbox.addEventListener('click', function (e) {
+                if (e.target !== closeBtn) close();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && lightbox.classList.contains('open')) close();
+            });
+        })();
+    </script>
 
     <script>
         // Parallax and fade effect for hero image

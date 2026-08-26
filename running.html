@@ -307,8 +307,8 @@
             <p class="hero-lede">A training log I actually read: how the runs and rides are trending, where my VO₂ max sits, and what to eat to back it up.</p>
             <!-- Headline stats baked into HTML for link previews & SEO -->
             <div class="hero-stats">
-                <div class="hero-stat"><b>642<em> km</em></b><span>Run · 2026</span></div>
-                <div class="hero-stat"><b>1,494<em> km</em></b><span>Bike · 2026</span></div>
+                <div class="hero-stat"><b id="hero-run">681<em> km</em></b><span id="hero-run-lbl">Run · 2026</span></div>
+                <div class="hero-stat"><b id="hero-bike">1,559<em> km</em></b><span id="hero-bike-lbl">Bike · 2026</span></div>
                 <div class="hero-stat"><b id="hero-vo2">55<em> ml/kg/min</em></b><span>VO₂ max · latest</span></div>
             </div>
         </div>
@@ -777,6 +777,19 @@
     document.querySelectorAll('#sport-toggles .toggle').forEach(b =>
         b.addEventListener('click', () => selectSport(b.dataset.sport)));
     selectSport('Run');
+
+    /* Keep the hero's year-to-date totals live from the data (static values
+       in the HTML are just a fallback for link-preview scrapers). */
+    (function updateHeroStats() {
+        if (!DATA.length) return;
+        const year = DATA[DATA.length - 1].d.getFullYear();
+        let run = 0, bike = 0;
+        DATA.forEach(a => { if (a.d.getFullYear() === year) { if (a.sport === 'Run') run += +a.distance_km; else bike += +a.distance_km; } });
+        const setNum = (id, km) => { const el = document.getElementById(id); if (el) el.innerHTML = Math.round(km).toLocaleString() + '<em> km</em>'; };
+        setNum('hero-run', run); setNum('hero-bike', bike);
+        const rl = document.getElementById('hero-run-lbl'); if (rl) rl.textContent = `Run · ${year}`;
+        const bl = document.getElementById('hero-bike-lbl'); if (bl) bl.textContent = `Bike · ${year}`;
+    })();
 
     /* ============================================================
        02 · VO₂ max (live sheet + json fallback)

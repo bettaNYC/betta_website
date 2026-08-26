@@ -163,6 +163,27 @@
         .act-stat span { font-size: 0.58rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--faint); }
         .empty { color: var(--faint); font-size: 0.85rem; padding: 1rem 0; }
 
+        /* ── Sub-headings within a section ── */
+        .subhead { font-size: 1rem; margin: 2.6rem 0 1rem; letter-spacing: -0.2px; font-weight: 700; }
+        .subhead:first-child { margin-top: 0; }
+
+        /* ── Personal records ── */
+        .records-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1rem; }
+        .record { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1.3rem 1.4rem; }
+        .record .r-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); font-weight: 700; }
+        .record .r-val { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.8px; margin: 0.55rem 0 0.25rem; line-height: 1; }
+        .record .r-val small { font-size: 0.85rem; font-weight: 600; color: var(--muted); }
+        .record .r-ctx { font-size: 0.75rem; color: var(--faint); }
+
+        /* ── Calendar heatmap ── */
+        .heatmap-wrap { overflow-x: auto; padding-bottom: 0.4rem; }
+        .hm-year { display: flex; align-items: flex-start; gap: 0.9rem; margin-bottom: 0.7rem; }
+        .hm-year-label { font-size: 0.72rem; font-weight: 700; color: var(--muted); width: 2.6rem; padding-top: 1px; flex-shrink: 0; }
+        .hm-grid { display: grid; grid-template-rows: repeat(7, 12px); grid-auto-flow: column; grid-auto-columns: 12px; gap: 3px; }
+        .hm-cell { width: 12px; height: 12px; border-radius: 2px; background: var(--line); }
+        .hm-legend { display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; color: var(--faint); margin-top: 0.9rem; }
+        .hm-legend .hm-cell { display: inline-block; }
+
         /* ── VO₂ vitals ── */
         .vitals-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
         .vital {
@@ -286,8 +307,8 @@
             <p class="hero-lede">A training log I actually read: how the runs and rides are trending, where my VO₂ max sits, and what to eat to back it up.</p>
             <!-- Headline stats baked into HTML for link previews & SEO -->
             <div class="hero-stats">
-                <div class="hero-stat"><b>578<em> km</em></b><span>Run · 2026</span></div>
-                <div class="hero-stat"><b>1,344<em> km</em></b><span>Bike · 2026</span></div>
+                <div class="hero-stat"><b>642<em> km</em></b><span>Run · 2026</span></div>
+                <div class="hero-stat"><b>1,494<em> km</em></b><span>Bike · 2026</span></div>
                 <div class="hero-stat"><b id="hero-vo2">55<em> ml/kg/min</em></b><span>VO₂ max · latest</span></div>
             </div>
         </div>
@@ -299,11 +320,11 @@
             <div class="sec-head">
                 <span class="sec-num">01 — Training</span>
                 <h2>Runs &amp; rides, over time</h2>
-                <p>Every session logged by hand. The point isn't the last workout — it's the direction across weeks.</p>
+                <p>Three years of training, backfilled from my full Strava export — over a thousand sessions. The point isn't the last workout; it's the direction across the months.</p>
             </div>
 
             <div class="note">
-                <p><strong>A note on the feed —</strong> Since June 30, Strava has kept its API behind a paid subscription, which I don't have. This page can no longer fetch my activities automatically, so I add each session by hand — one line in a data file, pace computed for me. The feed may go quiet now and then, but the training won't stop.</p>
+                <p><strong>A note on the feed —</strong> Since June 30, Strava has kept its API behind a paid subscription, which I don't have. So this is built from my full data export (May 2023 → Aug 2026), and I add each new session by hand — one line in a data file, pace computed for me. The feed may go quiet now and then, but the training won't stop.</p>
             </div>
 
             <div class="toggles" id="sport-toggles">
@@ -318,9 +339,33 @@
                 </div>
                 <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
                 <div class="summary-row" id="summary-row"></div>
-                <p class="card-note"><strong>Reading it —</strong> bars are distance, the line is pace (min/km for runs, km/h for rides). Watch the line: flat-or-faster while distance climbs is the trend I want.</p>
+                <p class="card-note"><strong>Reading it —</strong> each bar is a month's total distance; the line is average pace (min/km for runs, km/h for rides). Watch the line: flat-or-faster while the bars climb is the trend I want.</p>
             </div>
 
+            <!-- Personal records -->
+            <h3 class="subhead" id="records-head">Personal records</h3>
+            <div class="records-row" id="records-row"></div>
+
+            <!-- Year-over-year cumulative race -->
+            <div class="card" style="margin-top:1.8rem">
+                <div class="card-head">
+                    <h3 id="race-title">Ahead of last year?</h3>
+                    <span class="sub" id="race-sub"></span>
+                </div>
+                <div class="chart-wrap"><canvas id="raceChart"></canvas></div>
+                <p class="card-note"><strong>Cumulative distance by day of year —</strong> each line is one calendar year climbing from Jan 1. Where the newest line sits above an older one, I'm ahead of that year's pace on the same date.</p>
+            </div>
+
+            <!-- Calendar heatmap -->
+            <div class="card" style="margin-top:1.8rem">
+                <div class="card-head">
+                    <h3>Every day, at a glance</h3>
+                    <span class="sub">Each square is a day · shaded by distance</span>
+                </div>
+                <div class="heatmap-wrap" id="heatmap"></div>
+            </div>
+
+            <h3 class="subhead">Latest sessions</h3>
             <div class="activity-grid" id="activity-grid"></div>
         </div>
     </section>
@@ -484,18 +529,41 @@
        01 · Training trends + cards
        ============================================================ */
     let trendChart = null;
+    let raceChart = null;
     let currentSport = 'Run';
+    const dayOfYear = (d) => Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000);
+    const YEAR_COLORS = { 2022: '#e2d6c2', 2023: '#ddccb3', 2024: '#c9a97e', 2025: '#7c9a86', 2026: '#16130f', 2027: '#c98f4e' };
 
     function buildTrend(sport) {
         const rows = DATA.filter(a => a.sport === sport);
         const ctx = document.getElementById('trendChart').getContext('2d');
         const isRun = sport === 'Run';
 
-        document.getElementById('trend-title').textContent = `${sport} — distance & ${isRun ? 'pace' : 'speed'}`;
+        document.getElementById('trend-title').textContent = `${sport} — monthly volume & ${isRun ? 'pace' : 'speed'}`;
 
-        const labels = rows.map(a => fmtShort(a.d));
-        const dist   = rows.map(a => +a.distance_km);
-        const line   = rows.map(a => isRun ? (a.sec / a.distance_km) / 60 : speedKmh(a.sec, a.distance_km)); // min/km or km/h
+        // ── Aggregate every session into its calendar month ──
+        const months = new Map();
+        rows.forEach(a => {
+            const k = a.d.getFullYear() + '-' + a.d.getMonth();
+            let m = months.get(k);
+            if (!m) { m = { km: 0, sec: 0, y: a.d.getFullYear(), mon: a.d.getMonth() }; months.set(k, m); }
+            m.km += +a.distance_km; m.sec += a.sec;
+        });
+        // Walk month-by-month from first to last so empty months keep the time axis honest
+        const series = [];
+        const sorted = [...months.values()].sort((a, b) => (a.y - b.y) || (a.mon - b.mon));
+        if (sorted.length) {
+            let cy = sorted[0].y, cm = sorted[0].mon;
+            const ly = sorted[sorted.length - 1].y, lm = sorted[sorted.length - 1].mon;
+            while (cy < ly || (cy === ly && cm <= lm)) {
+                series.push(months.get(cy + '-' + cm) || { km: 0, sec: 0, y: cy, mon: cm });
+                if (++cm > 11) { cm = 0; cy++; }
+            }
+        }
+
+        const labels = series.map(m => new Date(m.y, m.mon, 1).toLocaleDateString('en-US', { month: 'short', year: '2-digit' }));
+        const dist   = series.map(m => +m.km.toFixed(1));
+        const line   = series.map(m => m.km ? (isRun ? (m.sec / m.km) / 60 : speedKmh(m.sec, m.km)) : null); // min/km or km/h
 
         const grad = ctx.createLinearGradient(0, 0, 0, 320);
         grad.addColorStop(0, 'rgba(212,165,116,0.55)');
@@ -508,8 +576,8 @@
                     { type: 'bar', label: 'Distance', data: dist, yAxisID: 'yDist',
                       backgroundColor: grad, borderRadius: 4, maxBarThickness: 34, order: 2 },
                     { type: 'line', label: isRun ? 'Pace' : 'Speed', data: line, yAxisID: 'yLine',
-                      borderColor: '#16130f', borderWidth: 2.5, tension: 0.35, order: 1,
-                      pointRadius: rows.length > 40 ? 0 : 4, pointBackgroundColor: '#16130f',
+                      borderColor: '#16130f', borderWidth: 2.5, tension: 0.35, order: 1, spanGaps: true,
+                      pointRadius: series.length > 40 ? 0 : 3, pointHoverRadius: 5, pointBackgroundColor: '#16130f',
                       pointBorderColor: '#fff', pointBorderWidth: 1.5 }
                 ]
             },
@@ -544,23 +612,26 @@
         if (trendChart) trendChart.destroy();
         trendChart = new Chart(ctx, cfg);
 
-        // Summary chips
-        const total = rows.reduce((s, a) => s + +a.distance_km, 0);
+        // Summary chips — lifetime totals for this sport
+        const total  = rows.reduce((s, a) => s + +a.distance_km, 0);
         const totSec = rows.reduce((s, a) => s + a.sec, 0);
+        const totElev = rows.reduce((s, a) => s + (+a.elev_m || 0), 0);
         const avgLine = isRun ? fmtPace(totSec, total) + ' /km' : speedKmh(totSec, total).toFixed(1) + ' km/h';
+        const sm = (u) => `<small style="font-size:.9rem"> ${u}</small>`;
         document.getElementById('summary-row').innerHTML = rows.length ? `
             <div class="summary"><b>${rows.length}</b><span>Sessions</span></div>
-            <div class="summary"><b>${total.toFixed(1)}<small style="font-size:.9rem"> km</small></b><span>Logged</span></div>
-            <div class="summary"><b>${(total / rows.length).toFixed(1)}<small style="font-size:.9rem"> km</small></b><span>Avg distance</span></div>
+            <div class="summary"><b>${Math.round(total).toLocaleString()}${sm('km')}</b><span>Distance</span></div>
+            <div class="summary"><b>${Math.round(totSec / 3600).toLocaleString()}${sm('h')}</b><span>Moving time</span></div>
+            <div class="summary"><b>${Math.round(totElev).toLocaleString()}${sm('m')}</b><span>Elevation</span></div>
             <div class="summary"><b style="font-size:1.3rem">${avgLine}</b><span>Avg ${isRun ? 'pace' : 'speed'}</span></div>
         ` : '';
         document.getElementById('trend-sub').textContent = rows.length
-            ? `${fmtShort(rows[0].d)} → ${fmtShort(rows[rows.length - 1].d)}`
+            ? `${series.length} months · ${fmtLong(rows[0].d)} → ${fmtLong(rows[rows.length - 1].d)}`
             : 'No sessions yet';
     }
 
     function renderCards(sport) {
-        const rows = DATA.filter(a => a.sport === sport).slice().reverse(); // newest first
+        const rows = DATA.filter(a => a.sport === sport).slice().reverse().slice(0, 6); // 6 most recent
         const grid = document.getElementById('activity-grid');
         if (!rows.length) { grid.innerHTML = '<p class="empty">No ' + sport.toLowerCase() + ' sessions logged yet.</p>'; return; }
         grid.innerHTML = rows.map(a => {
@@ -578,10 +649,129 @@
         }).join('');
     }
 
+    /* ── Year-over-year cumulative "race" ── */
+    const MONTH_STARTS = [1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
+    const MONTH_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    function buildRace(sport) {
+        const rows = DATA.filter(a => a.sport === sport);
+        const ctx = document.getElementById('raceChart').getContext('2d');
+        const isRun = sport === 'Run';
+        document.getElementById('race-title').textContent = isRun ? 'Ahead of last year? (running km)' : 'Ahead of last year? (riding km)';
+
+        const byYear = {};
+        rows.forEach(a => { (byYear[a.d.getFullYear()] || (byYear[a.d.getFullYear()] = [])).push(a); });
+        const years = Object.keys(byYear).map(Number).sort();
+        const datasets = years.map(y => {
+            const arr = byYear[y].slice().sort((a, b) => a.d - b.d);
+            let cum = 0;
+            const pts = arr.map(a => { cum += +a.distance_km; return { x: dayOfYear(a.d), y: +cum.toFixed(1) }; });
+            const isLatest = y === years[years.length - 1];
+            const col = YEAR_COLORS[y] || '#999';
+            return { label: String(y), data: pts, borderColor: col, backgroundColor: col,
+                borderWidth: isLatest ? 3 : 1.8, pointRadius: 0, pointHoverRadius: 4, tension: 0.12,
+                fill: false, order: isLatest ? 0 : 1 };
+        });
+
+        const cfg = { type: 'line', data: { datasets },
+            options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'nearest', axis: 'x', intersect: false },
+                plugins: {
+                    legend: { display: true, position: 'top', align: 'end',
+                        labels: { boxWidth: 10, boxHeight: 10, usePointStyle: true, pointStyle: 'line', font: { size: 12 }, color: '#666' } },
+                    tooltip: { backgroundColor: '#16130f', padding: 10, cornerRadius: 8, titleColor: '#d4a574', bodyColor: '#f3ede4',
+                        callbacks: {
+                            title: (items) => { const doy = items[0].parsed.x; const d = new Date(2025, 0, doy); return `${MONTH_ABBR[d.getMonth()]} ${d.getDate()}`; },
+                            label: (c) => ` ${c.dataset.label}: ${c.parsed.y.toLocaleString()} km` } }
+                },
+                scales: {
+                    x: { type: 'linear', min: 1, max: 366, grid: { display: false },
+                        afterBuildTicks: (axis) => { axis.ticks = MONTH_STARTS.map(v => ({ value: v })); },
+                        ticks: { color: '#999', font: { size: 11 }, maxRotation: 0, autoSkip: false,
+                            callback: (v) => { const i = MONTH_STARTS.indexOf(v); return i === -1 ? '' : MONTH_ABBR[i]; } } },
+                    y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#999', font: { size: 11 } },
+                        title: { display: true, text: 'cumulative km', color: '#b0a898', font: { size: 10 } } }
+                } } };
+        if (raceChart) raceChart.destroy();
+        raceChart = new Chart(ctx, cfg);
+        document.getElementById('race-sub').textContent = `${years[0]} → ${years[years.length - 1]}`;
+    }
+
+    /* ── Calendar heatmap (GitHub-style, one block per year) ── */
+    function buildHeatmap(sport) {
+        const rows = DATA.filter(a => a.sport === sport);
+        const wrap = document.getElementById('heatmap');
+        const byDay = {};
+        rows.forEach(a => { byDay[a.date] = (byDay[a.date] || 0) + +a.distance_km; });
+        const daily = Object.values(byDay).filter(v => v > 0).sort((a, b) => a - b);
+        const ref = daily.length ? daily[Math.floor(daily.length * 0.9)] : 1; // 90th percentile
+        const shades = ['rgba(201,143,78,0.28)', 'rgba(201,143,78,0.5)', 'rgba(201,143,78,0.72)', 'rgba(201,143,78,0.95)'];
+        const bucket = (km) => { if (km <= 0) return -1; if (km < ref * 0.33) return 0; if (km < ref * 0.66) return 1; if (km < ref) return 2; return 3; };
+        const years = [...new Set(rows.map(a => a.d.getFullYear()))].sort();
+        const pad = (n) => String(n).padStart(2, '0');
+
+        let html = '';
+        years.forEach(y => {
+            let cells = '';
+            const start = new Date(y, 0, 1), end = new Date(y, 11, 31);
+            for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                const key = `${y}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+                const km = byDay[key] || 0;
+                const b = bucket(km);
+                const bg = b === -1 ? '' : ` style="background:${shades[b]}${d.getTime() === start.getTime() ? `;grid-row-start:${((d.getDay() + 6) % 7) + 1}` : ''}"`;
+                // first cell needs its weekday offset even when empty
+                const firstStyle = (d.getTime() === start.getTime() && b === -1) ? ` style="grid-row-start:${((start.getDay() + 6) % 7) + 1}"` : '';
+                const title = km > 0 ? `${MONTH_ABBR[d.getMonth()]} ${d.getDate()}, ${y} · ${km.toFixed(1)} km` : `${MONTH_ABBR[d.getMonth()]} ${d.getDate()}, ${y} · rest`;
+                cells += `<div class="hm-cell"${bg || firstStyle} title="${title}"></div>`;
+            }
+            html += `<div class="hm-year"><span class="hm-year-label">${y}</span><div class="hm-grid">${cells}</div></div>`;
+        });
+        html += `<div class="hm-legend"><span>Less</span>
+            <span class="hm-cell"></span>
+            <span class="hm-cell" style="background:${shades[0]}"></span>
+            <span class="hm-cell" style="background:${shades[1]}"></span>
+            <span class="hm-cell" style="background:${shades[2]}"></span>
+            <span class="hm-cell" style="background:${shades[3]}"></span>
+            <span>More</span></div>`;
+        wrap.innerHTML = html;
+    }
+
+    /* ── Personal records ── */
+    function buildRecords(sport) {
+        const rows = DATA.filter(a => a.sport === sport);
+        const row = document.getElementById('records-row');
+        if (!rows.length) { row.innerHTML = ''; return; }
+        const isRun = sport === 'Run';
+
+        // Longest single session
+        const longest = rows.reduce((a, b) => (+b.distance_km > +a.distance_km ? b : a));
+        // Biggest climb
+        const climb = rows.reduce((a, b) => ((+b.elev_m || 0) > (+a.elev_m || 0) ? b : a));
+        // Fastest — best pace/speed over a "real" distance
+        const minKm = isRun ? 3 : 10;
+        const eligible = rows.filter(a => +a.distance_km >= minKm);
+        const fastest = (eligible.length ? eligible : rows).reduce((a, b) =>
+            (speedKmh(b.sec, b.distance_km) > speedKmh(a.sec, a.distance_km) ? b : a));
+        // Biggest month
+        const months = {};
+        rows.forEach(a => { const k = a.d.getFullYear() + '-' + a.d.getMonth(); (months[k] || (months[k] = { km: 0, y: a.d.getFullYear(), mon: a.d.getMonth() })).km += +a.distance_km; });
+        const bigMonth = Object.values(months).reduce((a, b) => (b.km > a.km ? b : a));
+
+        const fastVal = isRun ? `${fmtPace(fastest.sec, fastest.distance_km)}<small> /km</small>` : `${speedKmh(fastest.sec, fastest.distance_km).toFixed(1)}<small> km/h</small>`;
+        const cards = [
+            { label: isRun ? 'Longest run' : 'Longest ride', val: `${(+longest.distance_km).toFixed(1)}<small> km</small>`, ctx: fmtLong(longest.d) },
+            { label: isRun ? 'Fastest pace' : 'Fastest ride', val: fastVal, ctx: `${(+fastest.distance_km).toFixed(1)} km · ${fmtLong(fastest.d)}` },
+            { label: 'Biggest climb', val: `${Math.round(+climb.elev_m || 0).toLocaleString()}<small> m</small>`, ctx: `${(+climb.distance_km).toFixed(1)} km · ${fmtLong(climb.d)}` },
+            { label: 'Biggest month', val: `${Math.round(bigMonth.km).toLocaleString()}<small> km</small>`, ctx: new Date(bigMonth.y, bigMonth.mon, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) },
+        ];
+        row.innerHTML = cards.map(c => `<div class="record"><div class="r-label">${c.label}</div><div class="r-val">${c.val}</div><div class="r-ctx">${c.ctx}</div></div>`).join('');
+    }
+
     function selectSport(sport) {
         currentSport = sport;
         document.querySelectorAll('#sport-toggles .toggle').forEach(b => b.classList.toggle('active', b.dataset.sport === sport));
         buildTrend(sport);
+        buildRace(sport);
+        buildRecords(sport);
+        buildHeatmap(sport);
         renderCards(sport);
     }
     document.querySelectorAll('#sport-toggles .toggle').forEach(b =>
@@ -718,7 +908,7 @@
     function populateDaySelect() {
         const sel = document.getElementById('nf-day');
         const opts = ['<option value="rest">Rest day (no session)</option>'];
-        DATA.slice().reverse().forEach((a, i) => {
+        DATA.slice().reverse().slice(0, 30).forEach((a, i) => {  // last 30 sessions is plenty for "today"
             const mins = Math.round(a.sec / 60);
             opts.push(`<option value="${DATA.length - 1 - i}">${fmtLong(a.d)} · ${a.sport} ${(+a.distance_km).toFixed(1)}km · ${mins}min</option>`);
         });
